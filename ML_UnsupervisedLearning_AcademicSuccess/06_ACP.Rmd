@@ -1,0 +1,371 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+# ACP
+
+```{r, include=FALSE}
+data = get(load('prepro_data.Rdata'))
+```
+
+S'observa que la base de dades té un total de 8 columnes numèriques. Per tant, l'anàlisi de components principals tindrà 8 components.
+
+```{r}
+numeric <- which(sapply(data, is.numeric))
+data_numeric <- data[, numeric]
+sapply(data_numeric, class)
+```
+
+Els resultats de l'anàlisi de components principals sobre les variables numèriques són els següents: 
+
+```{r}
+pc1 <- prcomp(data_numeric, scale = TRUE)
+# class(pc1)
+# attributes(pc1)
+pc1
+```
+
+Cada component representa una inèrcia concreta. S'explica el percentatge d'inèrcia que representa cada component. 
+
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+inerProj <- pc1$sdev^2
+totalIner <- sum(inerProj)
+pinerEix <- 100*inerProj/totalIner
+barplot(pinerEix, 
+        main = "Percentatge del total d'inèrcia en cada component principal",
+        xlab = "", names.arg=paste("PC", 1:8),
+        ylab = "Percentatge d'inèrcia", ylim = c(0,35))
+text(x = seq(0.7, by = 1.12, length = 8), y = pinerEix+1.5, pos = 4,
+     paste0(round(pinerEix, 2),"%"), cex = 0.75, srt = 0)
+```
+
+Es veu que la primera component representa el 24.32% de la inèrcia, la segona el 19.26%, la tercera el 16.41%, la quarta el 12.6%, la cinquena el 11.73%, la sisena el 8.06%, la setena el 5.09% i, la vuitena el 2.53%. 
+
+Interessa també la inèrcia acumulada: 
+
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+percInerAccum <- 100*cumsum(pc1$sdev[1:dim(data_numeric)[2]]^2)/dim(data_numeric)[2]
+# Percentatge de l'acumulat d'inèrcia representat en cada subespai
+par(cex.main = 1, cex.lab = 1)
+barplot(percInerAccum, 
+        main = "Percentatge d'inèrcia acumulada en cada Component Principal",
+        xlab = "Nombre de components", names.arg = 1:8,
+        ylab = "Percentatge d'inèrcia acumulada",
+        ylim = c(0,125))
+abline(h = 80, col = 2, lwd = 2)
+text(x = seq(0.5, by = 1.12, length = 8), y = percInerAccum,
+     paste0(round(percInerAccum, 2),"%"), cex = 0.85, srt = 0, pos = 4)
+```
+
+Tenint en compte que la inèrcia equival a la proporció de la variabilitat de les dades, se sap que amb un 80% d'inèrcia, es pot obtenir gairebé tota la informació o variabilitat de la base de dades original. En el gràfic de la inèrcia acumulada es pot veure que amb les 4 primeres components ja s'aconsegueix gairebé el 80% de la inèrcia. Si es pren les 5 primeres components, el total de variabilitat que s'aconsegueix explicar és del 84.32%. Ens quedem amb les components PC1, PC2, PC3, PC4 i PC5.
+
+```{r}
+nd = 5 # ens quedem amb les 5 primeres components principals (PC1, PC2, PC3, PC4, PC5)
+``` 
+
+```{r, include=FALSE}
+dim(pc1$x)
+dim(data_numeric)
+# Dades als nous eixos de les 5 PCA
+Psi = pc1$x[,1:nd]
+dim(Psi)
+```
+
+```{r}
+iden = row.names(data_numeric) # Etiquetes dels individus
+etiq = names(data_numeric) # Etiquetes de les variables numèriques
+ze = rep(0,length(etiq)) # Caldrà aquest vector pels gràfics de després
+```
+
+Es realitza un gràfic de dispersió per a totes les combinacions possibles: 
+
+```{r, out.width="90%"}
+# PLOT OF INDIVIDUALS
+eje1 <- 1
+eje2 <- 2
+plot(Psi[,eje1],Psi[,eje2],ylab = "PC2",xlab="PC1",main="Projecció d'observacions entre PC1 i PC2")
+text(Psi[,eje1],Psi[,eje2],labels=iden, cex=0.5)
+axis(side=1, pos= 0, labels = F, col="cyan")
+axis(side=3, pos= 0, labels = F, col="cyan")
+axis(side=2, pos= 0, labels = F, col="cyan")
+axis(side=4, pos= 0, labels = F, col="cyan")
+```
+
+Les observacions es concentren principalment en els valors més petits de les dues components.
+
+```{r}
+Phi = cor(data_numeric, Psi)
+# View(Phi)
+```
+
+```{r}
+fm = round(max(abs(Psi[,1]))) 
+```
+
+```{r, out.width="90%"}
+X <- Phi[, eje1]
+Y <- Phi[, eje2]
+plot(Psi[, eje1], Psi[, eje2], type = "n", xlim=c(-4,4),ylim=c(-4,4))
+axis(side = 1, pos = 0, labels = F)
+axis(side = 3, pos = 0, labels = F)
+axis(side = 2, pos = 0, labels = F)
+axis(side = 4, pos = 0, labels = F)
+arrows(ze, ze, X, Y, length = 0.07, col = "blue")
+text(X, Y, labels = etiq, col = "darkblue", cex = 0.7)
+```
+
+## Projecció de les variables numèriques
+
+```{r, out.width="90%"}
+plot(Psi[,eje1],Psi[,eje2],type="n",xlim=c(min(X,0),max(X,0)), ylim=c(-1,1), 
+     xlab = "CP1", ylab = "CP2") 
+axis(side=1, pos= 0, labels = F)
+axis(side=3, pos= 0, labels = F)
+axis(side=2, pos= 0, labels = F)
+axis(side=4, pos= 0, labels = F)
+arrows(ze, ze, X, Y, length = 0.07,col="blue")
+text(X,Y,labels=etiq,col="darkblue", cex=0.7)
+```
+
+Les variables que representen les notes dels semestres i les variables que fan referència a les unitats no avaluables són les que tenen més variabilitat continguda en la representació dels dues components del biplot. Així mateix, s'observa que l'edat ha contribuït bastant a la component 1, ja que es veu com el vector paral·lel a l'eix de la component 1.
+
+```{r, out.width="95%"}
+# Gràfics de projecció de totes les combinacions possibles
+par(mfrow=c(1,2), cex.main=0.60, cex.axis=0.65)
+for(eje1 in 1:4){
+  for(eje2 in (eje1 + 1):5){
+    par(cex=1.5)
+    plot(Psi[,eje1],Psi[,eje2],
+         main="Gràfic de dispersió dels individus",
+         xlab=paste0("PC",eje1," (",round(pinerEix[eje1],4),"%)"), 
+         ylab=paste0("PC",eje2," (",round(pinerEix[eje2],4),"%)"),
+         bty="n", col="yellow", pch=".", cex=3)
+    #text(Psi[,eje1],Psi[,eje2],labels=iden, cex=0.5)
+    axis(side=1, pos=0, at=seq(-60, 60, by=2), labels = F,col="red")
+    axis(side=3, pos=0, at=seq(-60, 60, by=2), labels = F,col="red")
+    axis(side=2, pos=0, at=seq(-60, 60, by=2), labels = F,col="red")
+    axis(side=4, pos=0, at=seq(-60, 60, by=2), labels = F,col="red")
+    
+    }
+}
+```
+
+En el primer gràfic es veu que els individus es concentren en els valors més petits de PC1 i PC2. Passa el mateix quan es mira PC3 amb PC2, PC4 amb PC2 i PC5 amb PC2. Així mateix, els individus es distribueixen bastant uniformement en els darrers dos gràfics (PC5-PC3 i PC5-PC4).
+
+## Projecció de les variables categòriques
+
+Variables categòriques
+
+```{r}
+var_categoriques = which(sapply(data, is.factor))
+var_categoriques
+```
+
+Si en el mateix gràfic s'afegeixen totes les modalitats de totes les variables categòriques, s'obté el següent:
+
+```{r, echo=FALSE}
+plot(Psi[,eje1],Psi[,eje2],type="n",xlim=c(-1.6,1.6), ylim=c(-1,1), 
+     xlab = "CP1", ylab = "CP2")
+axis(side=1, pos= 0, labels = F, col="cyan")
+axis(side=3, pos= 0, labels = F, col="cyan")
+axis(side=2, pos= 0, labels = F, col="cyan")
+axis(side=4, pos= 0, labels = F, col="cyan")
+#nominal qualitative variables
+dcat<-c(1, 2, 3, 4, 5, 6, 7, 8, 9, 18)
+#divide categoricals in several graphs if joint representation saturates
+#build a palette with as much colors as qualitative variables 
+#colors<-c("blue","red","green","orange","darkgreen")
+#alternative
+colors<-rainbow(length(var_categoriques))
+c<-1
+for(k in var_categoriques){
+  seguentColor<-colors[c]
+  varcat <- as.factor(data[,k])
+  fdic1 <- tapply(Psi[,eje1], varcat, mean)
+  fdic2 <- tapply(Psi[,eje2], varcat, mean) 
+  text(fdic1, fdic2, levels(varcat), col=seguentColor, cex=0.8, font=3)
+c<-c+1
+}
+legend("topright",names(var_categoriques)[dcat],pch=1,col=colors, cex=0.6)
+```
+
+Aquest gràfic no es pot interpretar, ja que en tenir tantes modalitats aquestes no es poden distingir.
+
+Es limita el nombre màxim de modalitats a 8 per variable. A més a més, s'escurcen els noms d'algunes modalitats per tal que siguin llegibles al gràfic. Es repeteix aquest procediment per a les següents variables categòriques: course, previous qualification, nationality, occupation mother i occupation father, que són les que tenen més modalitats. 
+
+```{r, include=FALSE}
+# course
+freq_table_cat = table(data$course)
+freq_table_cat = freq_table_cat[order(freq_table_cat)]
+freq_table_cat
+```
+
+```{r, include=FALSE}
+# se seleccionen les modalitats que es volen etiquetar com "Other" (les menys freqüents)
+notkeep <- names(freq_table_cat[freq_table_cat < 258])
+keep <- names(freq_table_cat)[!names(freq_table_cat) %in% notkeep]
+names(keep) <- keep
+# recodificar
+levels(data$course) <- c(keep, list("Other" = notkeep))
+```
+
+```{r, include=FALSE}
+levels(data$course) = c("Marketing", "Management (PM)", "Journalism", "Vet Nursing", "Social Service", "Management", "Nursing", "Other")
+```
+
+```{r, include=FALSE}
+# previous qualification
+freq_table_cat = table(data$previous_qualification)
+freq_table_cat = freq_table_cat[order(freq_table_cat)]
+freq_table_cat
+```
+
+```{r, include=FALSE}
+# se seleccionen les modalitats que es volen etiquetar com "Other" (les menys freqüents)
+notkeep <- names(freq_table_cat[freq_table_cat < 38])
+keep <- names(freq_table_cat)[!names(freq_table_cat) %in% notkeep]
+names(keep) <- keep
+# recodificar
+levels(data$previous_qualification) <- c(keep, list("Other" = notkeep))
+```
+
+```{r, include=FALSE}
+levels(data$previous_qualification) = c("Degree (1st cycle)", "11th year", "Other", "Degree", "Basic (3rd cycle)", "Unknown", "Tech Specialization", "Secondary")
+```
+
+```{r, include=FALSE}
+# nationality
+freq_table_cat = table(data$nationality)
+freq_table_cat = freq_table_cat[order(freq_table_cat)]
+freq_table_cat
+```
+
+```{r, include=FALSE}
+# se seleccionen les modalitats que es volen etiquetar com "Other" (les menys freqüents)
+notkeep <- names(freq_table_cat[freq_table_cat < 5])
+keep <- names(freq_table_cat)[!names(freq_table_cat) %in% notkeep]
+names(keep) <- keep
+# recodificar
+levels(data$nationality) <- c(keep, list("Other" = notkeep))
+```
+
+```{r, include=FALSE}
+# occupation mother
+freq_table_cat = table(data$occupation_mother)
+freq_table_cat = freq_table_cat[order(freq_table_cat)]
+freq_table_cat
+```
+
+```{r, include=FALSE}
+# se seleccionen les modalitats que es volen etiquetar com "Other" (les menys freqüents)
+notkeep <- names(freq_table_cat[freq_table_cat < 247])
+keep <- names(freq_table_cat)[!names(freq_table_cat) %in% notkeep]
+names(keep) <- keep
+# recodificar
+levels(data$occupation_mother) <- c(keep, list("Other" = notkeep))
+```
+
+```{r, include=FALSE}
+levels(data$occupation_mother) = c("Unknown", "Construction", "Specialist", "Professor", "Safety Worker", "Other", "Admin", "Unskilled")
+```
+
+```{r, include=FALSE}
+# occupation father
+freq_table_cat = table(data$occupation_father)
+freq_table_cat = freq_table_cat[order(freq_table_cat)]
+freq_table_cat
+```
+
+```{r, include=FALSE}
+# se seleccionen les modalitats que es volen etiquetar com "Other" (les menys freqüents)
+notkeep <- names(freq_table_cat[freq_table_cat < 254])
+keep <- names(freq_table_cat)[!names(freq_table_cat) %in% notkeep]
+names(keep) <- keep
+# recodificar
+levels(data$occupation_father) <- c(keep, list("Other" = notkeep))
+```
+
+```{r, include=FALSE}
+levels(data$occupation_father) = c("Soldier", "Installation", "Admin", "Professor", "Safety Worker", "Construction", "Unskilled", "Other")
+```
+
+```{r}
+plot(Psi[,eje1],Psi[,eje2],type="n",xlim=c(-1,1), ylim=c(-1,0.5), 
+     xlab = "CP1", ylab = "CP2")
+axis(side=1, pos= 0, labels = F, col="cyan")
+axis(side=3, pos= 0, labels = F, col="cyan")
+axis(side=2, pos= 0, labels = F, col="cyan")
+axis(side=4, pos= 0, labels = F, col="cyan")
+#nominal qualitative variables
+dcat<-c(1:9, 18)
+#divide categoricals in several graphs if joint representation saturates
+#build a palette with as much colors as qualitative variables 
+#colors<-c("blue","red","green","orange","darkgreen")
+#alternative
+colors<-rainbow(length(var_categoriques))
+c<-1
+for(k in var_categoriques){
+  seguentColor<-colors[c]
+  varcat <- as.factor(data[,k])
+  fdic1 <- tapply(Psi[,eje1], varcat, mean)
+  fdic2 <- tapply(Psi[,eje2], varcat, mean) 
+  text(fdic1, fdic2, levels(varcat), col=seguentColor, cex=0.8, font=3)
+c<-c+1
+}
+legend("topright",names(var_categoriques)[dcat],pch=1,col=colors, cex=0.6)
+```
+
+Es crea un gràfic per a cada variable categòrica:
+
+```{r, out.width="95%"}
+col <- rainbow(length(var_categoriques))
+c <- 1
+for(k in var_categoriques){
+  par(cex.main=1, cex.lab=1)
+  plot(Psi[,1],Psi[,2],type="n",
+    xlab=paste0("PC",1," (",round(pinerEix[1],4),"%)"),
+    ylab=paste0("PC",2," (",round(pinerEix[2],4),"%)"),
+    xlim=c(-1.5,1.5), ylim=c(-1,1),
+    main="Projeccions sobre el pla factorial de variables categòriques")
+  axis(side=1, pos=0, at=seq(-70, 70, by=0.5), labels = F, col="black")
+  axis(side=2, pos=0, at=seq(-70, 70, by=0.5), labels = F, col="black")
+  axis(side=3, pos=0, at=seq(-70, 70, by=0.5), labels = F, col="black")
+  axis(side=4, pos=0, at=seq(-70, 70, by=0.5), labels = F, col="black")
+  arrows(ze, ze, X, Y, length = 0.05, col=c("aquamarine3","aquamarine4"))
+  text(X,Y,labels=etiq,col=c("aquamarine3","aquamarine4"), cex=0.85, font=3)
+  
+  varcat <- as.factor(data[,k])
+  fdic1 <- tapply(Psi[,1], varcat, mean)
+  fdic2 <- tapply(Psi[,2], varcat, mean) 
+  text(fdic1, fdic2, levels(varcat), col=seguentColor, cex=0.85, font=3)
+  
+  legend("bottomleft", legend = names(var_categoriques)[c], fill=seguentColor,
+         text.font=2, cex=1, ncol=1, bty="n")
+  
+  c <- c+1
+}
+```
+
+Per a la variable **course**, es veu que la majoria de les modalitats de la variable es troben molt a prop de l'origen, fet que implica que expliquen les dues components de manera similar però amb una baixa contribució sobre les components. Destaca la modalitat Vet Nursing, que explica la segona component, ja que es troba tot just a sobre de l'eix d'ordenades. Nursing té angles molt similars amb la primera i la segona component, per tant, es pot dir que les expliquen d'igual manera. 
+
+En la variable **daytime_attendance**, es veu que la modalitat Evening sembla explicar totes dues components per igual.
+
+La modalitat Degree de la variable **previous_qualification** explica més la primera component que la segona. Per aquesta variable, la majoria de les modalitats estan molt propers a l'origen. 11th year sembla explicar totes dues components per un igual.
+
+Per a la variable **nationality**, la modalitat Other explica perfectament la segona component, ja que es troba exactament a sobre de l'eix d'ordenades. La modalitat Guinean forma un angle similar amb totes dues components. 
+La majoria de les modalitats de la variable **occupation_mother** expliquen totes dues components per igual, però hi tenen una contribució molt baixa, ja que es troben molt properes a l'origen.
+
+El mateix es pot dir per a la variable **occupation_father** excepte per la modalitat Admin, que en trobar-se sobre l'eix d'ordenades i no sobre el de coordenades explica la segona component. 
+
+Pel que fa a les modalitats de la variable **special_needs**, es veu que només la modalitat No es troba sobre l'origen i que Yes i Unknown només expliquen la segona component.
+
+Per a la variable **gender**, Unknown explica la segona component. Female, en tenir un angle similar entre la primera i la segona es pot dir que les explica per igual. 
+
+La modalitat No de la variable **scholarship** explica la primera component a trobar-se just a sobre de l'eix de coordenades. No obstant això, té una contribució molt baixa sobre aquesta component, ja que es troba bastant propera a l'origen.
+
+Per a la variable **target** destaca la modalitat Dropout, la qual té una contribució força elevada sobre totes dues components. Enrolled sembla explicar més la segona component que la primera.
+
+```{r}
+# Es guarden les dades amb menys modalitats i noms més curts per utilitzar en les següents parts del treball
+# save(data, file="data_post_pca.RData")
+```
