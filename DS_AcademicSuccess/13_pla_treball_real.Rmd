@@ -1,0 +1,157 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+# Pla de treball real
+
+En finalitzar el treball es compara el pla de treball inicial amb el ritme de treball real. Per això, en aquest apartat es revisa punt a punt el pla de treball proposat al principi, per detectar possibles canvis i la incidència de riscos.
+
+## Diagrama de Gantt
+
+Per tal de complir els objectius del treball i seguir tots els punts que consten en el guió, es va dividir la feina en les següents tasques a desenvolupar.
+
+1.  Motivació del treball, descripció formal de les dades i profiling de les dades crues
+
+2.  Preprocessament
+
+3.  Profiling dades preprocessades i clustering jeràrquic
+
+4.  Preparar informe D3 i presentació 1
+
+5.  ACP i ACM
+
+6.  Clustering jeràrquic de l'ACP i l'ACM
+
+7.  Anàlisi comparativa
+
+8.  Conclusions
+
+9.  Pla de treball real
+
+10. Preparar informe D4 i presentació 2
+
+Durant les últimes setmanes es van afegir dos apartats més per consideració dels professors: anàlisi discriminant i anàlisi textual. Llavors, les tasques han quedat així:
+
+...
+
+7.  Anàlisi discriminant
+
+8.  Anàlisi textual
+
+9.  Anàlisi comparativa
+
+10. Conclusions
+
+11. Pla de treball real
+
+12. Preparar informe D4 i presentació 2
+
+Aquesta és la planificació de tasques proposada a l'inici del treball.
+
+```{r, out.width="95%"}
+library(reshape2)
+library(ggplot2)
+
+df <- data.frame(
+  name = factor(c("Tasca 01", "Tasca 02", "Tasca 03", "Tasca 04", "Tasca 05", "Tasca 06", "Tasca 07", "Tasca 08", "Tasca 09", "Tasca 10")),
+  inici  = as.Date(c("2023-03-02", "2023-03-09", "2023-03-23", "2023-04-06", "2023-04-13", "2023-04-20", "2023-04-27", "2023-05-04", "2023-05-11", "2023-05-18")),
+  final = as.Date(c("2023-03-08", "2023-03-22", "2023-04-05", "2023-04-12", "2023-04-19", "2023-04-26", "2023-05-03", "2023-05-10", "2023-05-17", "2023-05-24")))
+
+ggplot (df, aes (x = inici, xend = final, y = name, yend = name, colour = name)) + 
+  theme_bw () +
+  geom_segment (size = 8) +
+  labs (title = 'Diagrama de Gantt', x = NULL, y = NULL, legend = NULL) +
+  geom_area() +
+  theme(legend.position="none")
+```
+
+I aquesta és la temporalització i el ritme real de les tasques.
+
+```{r, out.width="95%"}
+ds <- data.frame(
+  name = factor(c("Tasca 01", "Tasca 02", "Tasca 03", "Tasca 04", "Tasca 05", "Tasca 06", "Tasca 07", "Tasca 08", "Tasca 09", "Tasca 10", "Tasca 11", "Tasca 12")),
+  inici  = as.Date(c("2023-03-02", "2023-03-09", "2023-03-23", "2023-04-06", "2023-04-20", "2023-05-04", "2023-05-11", "2023-05-18", "2023-05-18", "2023-05-18", "2023-05-21","2023-05-11")),
+  final = as.Date(c("2023-03-08", "2023-03-22", "2023-04-05", "2023-04-12", "2023-05-10", "2023-05-14", "2023-05-17", "2023-05-21", "2023-05-23", "2023-05-23", "2023-05-24", "2023-05-24")))
+
+ggplot (ds, aes (x = inici, xend = final, y = name, yend = name, colour = name)) + 
+  theme_bw () +
+  geom_segment (size = 8) +
+  labs (title = 'Diagrama de Gantt real', x = NULL, y = NULL, legend = NULL) +
+  geom_area() +
+  theme(legend.position="none")
+```
+
+El pla de treball real s'ha vist afectat, especialment en les etapes finals, pel ritme de les classes de teoria, ja que es van plantejar tasques per abans que s'expliqués el tema corresponent a classe. La tasca de l'ACP i l'ACM n'és un exemple. A més, es va sobreestimar el temps que requeririen algunes tasques, i se'n van subestimar d'altres.
+
+Al maig, s'han encavalcat moltes tasques a causa de dos factors: les dues tasques extres no previstes i la subestimació del temps necessari per a l'ACP i l'ACM, així com al clustering jeràrquic d'aquests. 
+
+## Assignació de tasques
+
+Les tasques descrites en l'anterior secció es van repartir entre els integrants del grup de la següent manera:
+
+```{r, echo = FALSE}
+df <- data.frame(
+  tasques = factor(c("Motivació treball", "Descripció formal dades", "Profiling dades crues", "Preprocessament", "Profiling dades preprocessades", "Clustering jeràrquic", "Informe D3 i presentació 1", "ACP", "ACM", "Clustering jeràrquic ACP i ACM", "Anàlisi comparativa", "Conclusions", "Pla de treball real", "Informe D4 i presentació 2")),
+  assignacio = factor(c("Grup 1", "Grup 2", "Grup 3", "Grup 4", "Grup 2", "Grup 1", "Tothom", "Grup 3", "Grup 4", "Grup 1", "Grup 2", "Tothom", "Grup 4", "Tothom")))
+```
+
+| Tasca                          | Aina i Oscar | Lucía i Laura T. | Mireia i Laura V. | Berta i Albert |
+|---------------|:-------------:|:-------------:|:-------------:|:-------------:|
+| Motivació treball              |      X       |                  |                   |                |
+| Descripció formal dades        |              |        X         |                   |                |
+| Profiling dades crues          |              |                  |         X         |                |
+| Preprocessament                |              |                  |                   |       X        |
+| Profiling dades preprocessades |              |        X         |                   |                |
+| Clustering jeràrquic           |      X       |                  |                   |                |
+| Informe D3 i presentació 1     |      X       |        X         |         X         |       X        |
+| ACP                            |              |                  |         X         |                |
+| ACM                            |              |                  |                   |       X        |
+| Clustering jeràrquic ACP i ACM |      X       |                  |                   |                |
+| Anàlisi comparativa            |              |        X         |                   |                |
+| Conclusions                    |      X       |        X         |         X         |       X        |
+| Pla treball real               |              |                  |                   |       X        |
+| Informe D4 i presentació 2     |      X       |        X         |         X         |       X        |
+
+Tots els grups han dut a terme les tasques assignades. Les dues tasques extres es van assignar als grups amb més disponibilitat de temps en el moment en què es van proposar els nous apartats. L'assignació de tasques final ha estat:
+
+| Tasca                          | Aina i Oscar | Lucía i Laura T. | Mireia i Laura V. | Berta i Albert |
+|---------------|:-------------:|:-------------:|:-------------:|:-------------:|
+| Motivació treball              |      X       |                  |                   |                |
+| Descripció formal dades        |              |        X         |                   |                |
+| Profiling dades crues          |              |                  |         X         |                |
+| Preprocessament                |              |                  |                   |       X        |
+| Profiling dades preprocessades |              |        X         |                   |                |
+| Clustering jeràrquic           |      X       |                  |                   |                |
+| Informe D3 i presentació 1     |      X       |        X         |         X         |       X        |
+| ACP                            |              |                  |         X         |                |
+| ACM                            |              |                  |                   |       X        |
+| Clustering jeràrquic ACP i ACM |      X       |                  |                   |                |
+| **Anàlisi discriminant**           |              |                  |         **X**         |                |
+| **Anàlisi textual**                |              |                  |                   |       **X**        |
+| Anàlisi comparativa            |              |        X         |                   |                |
+| **Conclusions**                    |              |        **X**         |                   |                |
+| Pla treball real               |              |                  |                   |       X        |
+| Informe D4 i presentació 2     |      X       |        X         |         X         |       X        |
+
+## Pla de riscos
+
+Amb la premissa de prevenir que qualsevol imprevist s'agreugi i poder continuar la planificació, es va dur a terme el següent pla de riscos:
+
+| Risc                                                                                                  | Impacte | Solució                                                                                                                      |
+|----------------------------|:----------:|--------------------------------|
+| Falta de temps acadèmic, retard en les tasques                                                        |   Alt   | Planificació amb suficient antelació. Si cal, reajustar el calendari, allargar i escurçar terminis.                          |
+| Pèrdua de documents                                                                                   |   Alt   | Possible recuperació de versions anteriors. Tenir còpies de totes les actualitzacions (Drive i Github).                      |
+| Renúncia o pèrdua de l'avaluació contínua                                                             | Moderat | Es reorganitzen els grups.                                                                                                   |
+| Incapacitat per treballar (indisposició, malalties, problemes personals, problemes informàtics, etc.) | Moderat | Si la tasca té poc pes, la fa la parella. Si és molta feina, s'encarrega un altre grup que no tingui cap tasca en el moment. |
+| Conflictes entre parelles                                                                             |  Baix   | Intentar solucionar els problemes amb ajuda d'algun membre com a mediador. Si no s'aconsegueix, reestructuració dels grups.  |
+
+Al final del projecte, s'han revisat la incidència dels riscos previstos i de no previstos. Queden resumits en la taula següent:
+
+| Risc                                                                                                  | Incidència | Accions                                                                                                                      |
+|----------------------------|:----------:|--------------------------------|
+| Falta de temps acadèmic, retard en les tasques                                                        |   Alt   | S'ha reajustat el calendari, allargant i escurçant terminis.                          |
+| Pèrdua de documents                                                                                   |   No succeït   | |
+| Renúncia o pèrdua de l'avaluació contínua                                                             | No succeït |      |                                                                                              |
+| Incapacitat per treballar (indisposició, malalties, problemes personals, problemes informàtics, etc.) | No succeït |  |
+| Conflictes entre parelles                                                                             |  No succeït   | 
+| **Calendari no compassat amb les classes teòriques**                                               | **Moderat**     | **S'ha reorganitzat el calendari, començant les tasques tan aviat com s'ha pogut** |

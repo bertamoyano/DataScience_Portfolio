@@ -1,0 +1,632 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+## Anàlisi descriptiva després del preprocessing
+
+```{r}
+library(ggplot2)
+library(knitr)
+library(summarytools)
+library(tidyverse)
+
+profiling = function(X, col_name, data){
+  if (!(is.numeric(X) || class(X)=="Date")){ 
+    freqs = table(as.factor(X), useNA = "no"); 
+    proportions = freqs/nrow(data)
+    df = data.frame(x = levels(as.factor(X)), y = freqs)
+    par(mfrow = c(1,2))
+    print(ggplot(df, aes(x = "", y = freqs, fill = x)) + geom_bar(stat = "identity",
+    width = 1) + scale_y_continuous(expand = c(0,0)) + coord_polar("y", start = 0) + 
+    theme_minimal())
+    print(ggplot(df, aes(x = x, y = freqs)) + geom_bar(stat = "identity", color =
+    "lightblue", fill = "lightblue") + 
+    geom_text(aes(label = x), nudge_y = -5, size = 3) +
+    scale_y_continuous(expand = c(0,0), name = "Frequency") + 
+    scale_x_discrete(name = col_name) + 
+    theme_minimal() +
+    theme(axis.text.x = element_blank(), 
+          axis.ticks.x = element_blank(), 
+          axis.text.y = element_text(size = 10),
+          axis.line.x = element_line(color = "black", size = 0.5),
+          panel.grid.major.y = element_line(color = "gray", size = 0.2)))
+    x = data.frame(X)
+    colnames(x) = col_name
+    st_options(plain.ascii  = FALSE,  headings = FALSE, footnote = NA, style = 'grid',
+               dfSummary.varnumbers = FALSE, dfSummary.valid.col = FALSE, tmp.img.dir  = "img",
+               round.digits = 3, dfSummary.silent=TRUE, dfSummary.graph.col= FALSE)
+    dfSummary(x) 
+
+   }else{
+      print(ggplot(data, aes(x = X)) + geom_bar(col = "lightblue", fill = "lightblue") + theme_minimal())
+       taula = descr(X, transpose = TRUE, style = "rmarkdown", justify = "center", 
+                 stats = c("N.Valid", "min", "q1", "med", "mean", "sd", "q3", "max", "iqr"))
+       rownames(taula) = NULL
+       print(taula)
+   }
+}
+```
+
+```{r}
+load('prepro_data.Rdata')
+```
+
+### Anàlisi univariant de les variables
+
+Per la part de l'anàlisi descriptiva després del preprocessing, en vista que els resultats són molt similars a aquells d'abans del preprocessing, no es farà una anàlisi en profunditat de cada gràfic, sinó que es remetrà a l'anàlisi d'abans del preprocessing per als gràfics que es presenten. A la part d'anàlisi descriptiva bivariant, en canvi, sí que s'estudiaran tots els gràfics.
+
+**Variables categòriques**
+
+S'ha afegit una variable nova, Unknown, que conté les dades faltants. Com que els missings s'han creat artificialment perquè representin només el 5% de la variable, l'addició de la variable Unknown no provoca canvis significatius en la descriptiva.
+
+En les variables categòriques, la diferència més notòria és que les classes amb més percentatge es veuen reduïdes per la variable Unknown.
+
+*COURSE*
+
+```{r, out.width="50%"}
+profiling(prepro_data$course, 'course', prepro_data)
+```
+
+*DAYTIME_ATTENDANCE*
+
+```{r, out.width="50%"}
+profiling(prepro_data$daytime_attendance, 'daytime_attendance', prepro_data)
+```
+
+*NATIONALITY*
+
+```{r, out.width="50%"}
+profiling(prepro_data$nationality, 'nationality', prepro_data)
+```
+
+*OCCUPATION_MOTHER*
+
+```{r, out.width="50%"}
+profiling(prepro_data$occupation_mother, 'occupation_mother', prepro_data)
+```
+
+*OCCUPATION_FATHER*
+
+```{r, out.width="50%"}
+profiling(prepro_data$occupation_father, 'occupation_father', prepro_data)
+```
+
+*SPECIAL_NEEDS*
+
+```{r, out.width="50%"}
+profiling(prepro_data$special_needs, 'special_needs', prepro_data)
+```
+
+*GENDER*
+
+```{r, out.width="50%"}
+profiling(prepro_data$gender, 'gender', prepro_data)
+```
+
+*SCHOLARSHIP*
+
+```{r, out.width="50%"}
+profiling(prepro_data$scholarship, 'scholarship', prepro_data)
+```
+
+*TARGET*
+
+```{r, out.width="50%"}
+profiling(prepro_data$target, 'target', prepro_data)
+```
+
+*PREVIOUS_QUALIFICATION*
+
+```{r, out.width="50%"}
+profiling(prepro_data$previous_qualification, 'previous_qualification', prepro_data)
+```
+
+**Variables numèriques**
+
+En les variables numèriques tampoc s'observen canvis significatius.
+El més destacable és que la mediana de la taxa d'inflació ha baixat de 1.4% a 1% i la mitjana del PIB ha variat de 0.003% a 0.011%.
+
+*AGE*
+
+```{r, out.width="60%"}
+profiling(prepro_data$age, 'age', prepro_data)
+```
+
+*GRADES_SEM_1*
+
+```{r, out.width="60%"}
+profiling(prepro_data$grades_sem_1, 'grades_sem_1', prepro_data)
+```
+
+*NO_EVAL_SEM_1*
+
+```{r, out.width="60%"}
+profiling(prepro_data$no_eval_sem_1, 'no_eval_sem_1', prepro_data)
+```
+
+*GRADES_SEM_2*
+
+```{r, out.width="60%"}
+profiling(prepro_data$grades_sem_2, 'grades_sem_2', prepro_data)
+```
+
+*NO_EVAL_SEM_2*
+
+```{r, out.width="60%"}
+profiling(prepro_data$no_eval_sem_2, 'no_eval_sem_2', prepro_data)
+```
+
+*UNEMPLOYMENT_RATE*
+
+```{r, out.width="60%"}
+profiling(prepro_data$unemployment_rate, 'unemployment_rate', prepro_data)
+```
+
+*INFLATION_RATE*
+
+```{r, out.width="60%"}
+profiling(prepro_data$inflation_rate, 'inflation_rate', prepro_data)
+```
+
+*GDP*
+
+```{r, out.width="60%"}
+profiling(prepro_data$gdp, 'gdp', prepro_data)
+```
+
+### Anàlisi bivariant
+
+**Dues variables numèriques**
+
+*AGE* i *GRADES_SEM_1*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = age, y = grades_sem_1, color = grades_sem_1)) +
+  geom_jitter()  +
+  scale_color_gradient(low = "lightblue", high = "orange") +
+  theme_minimal()
+```
+
+En funció de l'edat, s'observa que no hi ha diferències significatives a la nota del primer semestre. És possible que, en entrar en una edat més avançada (dels 50 endavant) hi hagi menys tendència a les notes excel·lents. 
+
+*AGE* i *GRADES_SEM_2*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = age, y = grades_sem_2, color = grades_sem_2)) +
+  geom_jitter()  +
+  scale_color_gradient(low = "lightblue", high = "orange") +
+  theme_minimal()
+```
+
+Per a les notes del segon semestre, s'observa el mateix que amb les notes del primer.
+
+*AGE* i *NO_EVAL_SEM_1*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = age, y = no_eval_sem_1, color = no_eval_sem_1)) +
+  geom_jitter()  +
+  scale_color_gradient(low = "lightblue", high = "orange") +
+  theme_minimal()
+```
+
+L'edat no sembla significativa respecte al nombre d'unitats no avaluades al primer semestre.
+
+*AGE* i *NO_EVAL_SEM_2*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = age, y = no_eval_sem_2, color = no_eval_sem_2)) +
+  geom_jitter()  +
+  scale_color_gradient(low = "lightblue", high = "orange") +
+  theme_minimal()
+```
+
+Igual que pel primer semestre, l'edat no sembla significativa respecte al nombre d'unitats no avaluades al segon semestre.
+
+*GRADES_SEM_1* i *NO_EVAL_SEM_1*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = grades_sem_1, y = no_eval_sem_1, color = no_eval_sem_1)) +
+  geom_jitter()  +
+  scale_color_gradient(low = "lightblue", high = "orange") +
+  theme_minimal()
+```
+
+No sembla haver-hi correlació entre les notes del primer semestre i el nombre d'unitats no avaluades al primer semestre.
+
+*GRADES_SEM_2* i *NO_EVAL_SEM_2*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = grades_sem_2, y = no_eval_sem_2, color = no_eval_sem_2)) +
+  geom_jitter()  +
+  scale_color_gradient(low = "lightblue", high = "orange") +
+  theme_minimal()
+```
+
+No sembla haver-hi correlació entre les notes del segon semestre i el nombre d'unitats no avaluades al segon semestre.
+
+**Dues variables categòriques**
+
+*NATIONALITY* i *DAYTIME_ATTENDANCE*
+
+Per fer l'anàlisi de la variable "nationality", se separaren els casos de persones portugueses o de nacionalitat desconeguda respecte dels altres casos, ja que la diferència en nombre de casos per les dues classificacions no permet veure bé les dades de les persones no portugueses.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality == "Portuguese" | prepro_data$nationality == "Unknown",], aes(x = nationality, fill = daytime_attendance)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Pel cas de persones portugueses o de nacionalitat desconeguda, s'observa una distribució similar en assistir al matí, a la tarda o no haver-hi dades al respecte.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality != "Portuguese" & prepro_data$nationality != "Unknown",], aes(x = nationality, fill = daytime_attendance)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Pel cas de les persones no portugueses, el nombre reduït de casos no permet veure bé la distribució, però la majoria de les persones va al matí, igual que al cas de les persones portugueses o de nacionalitat desconeguda. 
+
+*SPECIAL_NEEDS* i *DAYTIME_ATTENDANCE*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = special_needs, fill = daytime_attendance)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Sembla que independentment de si es tenen necessitats especials o no, o si no se sap, la distribució d'anar al dia, a la tarda o que no hi hagi dades és la mateixa que abans. 
+
+*GENDER* i *DAYTIME_ATTENDANCE*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = gender, fill = daytime_attendance)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Independentment del gènere, la majoria de les persones van al matí.
+
+*SCHOLARSHIP* i *DAYTIME_ATTENDANCE*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = scholarship, fill = daytime_attendance)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Sembla que les persones amb beca van menys a classe a la tarda que les persones sense beca, relativament a la quantitat de persones que hi ha de cada tipus.
+
+*PREVIOUS_QUALIFICATION* i *DAYTIME_ATTENDANCE*
+
+Per l'anàlisi de dades que inclogui la variable de la qualificació prèvia, se separaran els casos de persones amb educació secundària respecte de les altres, per poder fer una visualització millor de les dades.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$previous_qualification=="Secondary education",], aes(x = previous_qualification, fill = daytime_attendance)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal() 
+```
+
+La distribució de matí, tarda i sense dades és la mateixa que s'ha anat observant pel cas de l'educació secundària.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$previous_qualification!="Secondary education",], aes(x = previous_qualification, fill = daytime_attendance)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Per als altres casos, es pot observar que hi ha grups que tenen més tendència de l'usual a anar a la tarda, com ara les persones amb un grau o aquelles amb educació bàsica de tercer cicle. Això pot ser perquè aquests són grups que tenen més probabilitat de treballar al matí.
+
+*TARGET* i *DAYTIME_ATTENDANCE*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = target, fill = daytime_attendance)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Les persones que van deixar el grau tenien més tendència a anar a classe a la tarda que les persones que es van graduar. Es pot observar que aproximadament és el doble de tendència.
+
+*NATIONALITY* i *SPECIAL_NEEDS*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality == "Portuguese" | prepro_data$nationality == "Unknown",], aes(x = nationality, fill = special_needs)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Les persones portugueses majoritàriament no tenen necessitats especials, tot i que es pot veure que aproximadament unes 200 persones portugueses de la mostra sí que en tenen. 
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality != "Portuguese" & prepro_data$nationality != "Unknown",], aes(x = nationality, fill = special_needs)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Per a les altres nacionalitats, no es pot saber significativament la probabilitat de tenir necessitats especials, ja que la mida de la mostra és molt petita. Es pot observar, però, que la majoria d'estudiants de nacionalitat no portuguesa no tenen necessitats especials a la mostra.
+
+*NATIONALITY* i *GENDER*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality == "Portuguese" | prepro_data$nationality == "Unknown",], aes(x = nationality, fill = gender)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Es pot observar que pels casos de nacionalitat portuguesa, aproximadament hi ha el doble de dones que d'homes estudiant. D'una proporció significativa de persones no se sap el gènere. Pels casos de nacionalitat desconeguda, els gèneres estan més igualats, tot i que no del tot.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality != "Portuguese" & prepro_data$nationality != "Unknown",], aes(x = nationality, fill = gender)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+A les altres nacionalitats també s'observa més tendència a ser estudiant dona que home.
+
+*NATIONALITY* i *SCHOLARSHIP*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality == "Portuguese" | prepro_data$nationality == "Unknown",], aes(x = nationality, fill = scholarship)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Per a les persones portugueses, la probabilitat de tenir beca és aproximadament un quart. Pels casos de nacionalitat desconeguda s'observa una tendència similar.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality != "Portuguese" & prepro_data$nationality != "Unknown",], aes(x = nationality, fill = scholarship)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Per a les persones no portugueses, no hi ha prou dades per a extreure conclusions significatives, però s'observa una tendència similar.
+
+*NATIONALITY* i *TARGET*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality == "Portuguese" | prepro_data$nationality == "Unknown",], aes(x = nationality, fill = target)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue", "purple", "orange", "red")) + theme_minimal()
+```
+
+La probabilitat de graduar-se en persones portugueses és aproximadament un 140% de la probabilitat de deixar la carrera.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$nationality != "Portuguese" & prepro_data$nationality != "Unknown",], aes(x = nationality, fill = target)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue", "purple", "orange", "red")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Amb el nombre baix de dades de nacionalitats no portugueses, no es pot saber bé la distribució, però sembla que es replica l'anterior.
+
+*SPECIAL_NEEDS* i *GENDER*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = special_needs, fill = gender)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+El gènere no sembla rellevant respecte de tenir necessitats especials o no.
+
+*SPECIAL_NEEDS* i *SCHOLARSHIP*
+
+Per als gràfics, observant el fet de tenir necessitats especials o no junt amb tenir scholarship o no, se separaren la categoria de tenir necessitats especials respecte de no tenir-ne o que no se sàpiga per poder visualitzar millor els resultats.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$special_needs!="Yes",], aes(x = special_needs, fill = scholarship)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Per les persones sense necessitats especials, la probabilitat de tenir scholarship és aproximadament un quart. Sembla replicar-se per als casos desconeguts. 
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$special_needs=="Yes",], aes(x = special_needs, fill = scholarship)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Per a les persones amb necessitats especials, la probabilitat de tenir beca sembla més aviat un terç. Tot i això, la mida mostral reduïda implica que el resultat no és significatiu. 
+
+Per a l'anàlisi conjunta de tenir necessitats especials o no i graduar-se o no, se separaren els casos de necessitats especials i els que no, per poder observar millor els resultats. 
+
+*SPECIAL_NEEDS* i *TARGET*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$special_needs!="Yes",], aes(x = special_needs, fill = target)) + geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange", "red")) + theme_minimal()
+```
+
+Sense necessitats especials, la probabilitat de graduar-se és aproximadament un 140% de la de deixar la carrera, altre cop. Pel cas de persones que no se sap si tenen necessitats especials o no, sembla que la probabilitat és la mateixa de graduar-se que de deixar-ho. Tot i això, la mida mostral és molt reduïda.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$special_needs=="Yes",], aes(x = special_needs, fill = target)) + geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange", "red")) + theme_minimal()
+```
+
+Per a les persones amb necessitats especials, s'observa la mateixa tendència que sense necessitats especials.
+
+*PREVIOUS_QUALIFICATION* i *GENDER*
+
+Per l'anàlisi de gènere segons qualificació prèvia, se separaran els casos d'educació secundària respecte dels altres per millor visibilitat.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$previous_qualification=="Secondary education",], aes(x = previous_qualification, fill = gender)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Les persones amb educació secundària com a qualificació prèvia, dos terços són dones, aproximadament.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$previous_qualification!="Secondary education",], aes(x = previous_qualification, fill = gender)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Per a les altres qualificacions prèvies, la distribució de gènere canvia. Per exemple, hi ha més persones amb un curs d'especialització tecnològica que són homes que dones, o amb educació bàsica de tercer cicle. Tot i això, cal tenir en compte que per a aquests casos la mida mostral no és gaire gran.
+
+*GENDER* i *SCHOLARSHIP*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = gender, fill = scholarship)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+La probabilitat de tenir beca com a dona és més alta que com a home, tot i que continua sent més probable no tenir-ne.
+
+*TARGET* i *GENDER*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = target, fill = gender)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Si es miren les freqüències relatives a cada gènere, tenint en compte que hi ha més dones que homes inscrits, la probabilitat de deixar la carrera és més alta com a home, tot i que el nombre observat d'homes que l'hagin deixat i de dones sigui similar. 
+
+*PREVIOUS_QUALIFICATION* i *SCHOLARSHIP*
+
+Per l'anàlisi de qualificació prèvia respecte de scholarship, se separaren els casos d'educació secundària respecte dels altres.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$previous_qualification=="Secondary education",], aes(x = previous_qualification, fill = scholarship)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+Per a persones amb educació secundària, la probabilitat de tenir beca és aproximadament un quart.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$previous_qualification!="Secondary education",], aes(x = previous_qualification, fill = scholarship)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Per a la majoria dels altres casos, la probabilitat de tenir beca sembla inferior.
+
+*TARGET* i *SCHOLARSHIP*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = target, fill = scholarship)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue","purple", "orange")) + theme_minimal()
+```
+
+La majoria de persones amb beca s'han graduat, tot i que n'hi ha hagut que ho han deixat. Les persones sense beca tenen una probabilitat similar de deixar-ho que de graduar-se, aquesta última sent una mica més alta.
+
+*PREVIOUS_QUALIFICATION* i *TARGET*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$previous_qualification=="Secondary education",], aes(x = previous_qualification, fill = target)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue", "purple", "orange", "red")) + theme_minimal()
+```
+
+Les persones amb educació secundària tenen un terç aproximat de probabilitats de deixar-ho.
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data[prepro_data$previous_qualification!="Secondary education",], aes(x = previous_qualification, fill = target)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue", "purple", "orange", "red")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+Per als altres grups la distribució és diferent. Hi ha grups amb més probabilitat de deixar-ho que de seguir, alguns de manera preocupant, com ara per a les persones amb educació bàsica de tercer cicle o de segon cicle.
+
+*OCCUPATION_MOTHER* i *TARGET*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = occupation_mother, fill = target)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue", "purple", "orange", "red")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+L'ocupació de la mare no sembla una variable rellevant per a si la persona es gradua o no.
+
+*OCCUPATION_FATHER* i *TARGET*
+
+```{r, out.width="60%"}
+ggplot(data = prepro_data, aes(x = occupation_father, fill = target)) +
+    geom_bar(position = "dodge") +  scale_fill_manual(values= c("lightblue", "purple", "orange", "red")) + theme_minimal() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+La del pare tampoc.
+
+**Una variable numèrica i una de categòrica**
+
+*AGE* i *GENDER*
+
+```{r, out.width="60%"}
+ggplot(prepro_data, aes(x = age, fill = gender)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 2) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange")) 
+
+```
+
+Hi ha més tendència a estudiar a edats joves. Als rangs d'edat més joves, hi ha més dones que homes. A partir, aproximadament, els 25, els dos gèneres estudien de forma similar.
+
+*AGE* i *SCHOLARSHIP*
+
+```{r, out.width="60%"}
+ggplot(prepro_data, aes(x = age, fill = scholarship)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 2) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange")) 
+```
+
+Les beques són molt més comunes a les edats més joves.
+
+*AGE* i *SPECIAL_NEEDS*
+
+```{r, out.width="60%"}
+ggplot(prepro_data, aes(x = age, fill = special_needs)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 2) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange")) 
+```
+
+No sembla que hi hagi correlació entre l'edat i tenir necessitats especials.
+
+*AGE* i *DAYTIME_ATTENDANCE*
+
+```{r, out.width="60%"}
+ggplot(prepro_data, aes(x = age, fill = daytime_attendance)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 2) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange")) 
+```
+
+S'observa que, amb l'edat, hi ha més tendència a anar a classes de tardes que de matins.
+
+*AGE* i *TARGET*
+
+```{r, out.width="60%"}
+ggplot(prepro_data, aes(x = age, fill = target)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 3) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange", "red")) 
+```
+
+Amb l'edat, incrementa la probabilitat relativa de deixar la carrera i no graduar-se.
+
+*GRADES_SEM_1* i *GENDER*
+
+```{r, out.width="60%"}
+ggplot(prepro_data, aes(x = grades_sem_1, fill = gender)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 1) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange")) 
+```
+
+Les notes del primer semestre semblen distribuir-se igualment entre els dos gèneres, tenint les dones una mitjana relativament més alta. Tenint en compte que el 0 significa no presentat, però, s'observa que els homes tenen més tendència a no presentar-se que les dones.
+
+*GRADES_SEM_1* i *SCHOLARSHIP*
+
+```{r, out.width="60%"}
+ggplot(prepro_data, aes(x = grades_sem_1, fill = scholarship)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 1) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange")) 
+```
+
+Hi ha correlació entre treure notes més altes i tenir una beca. Tenint beca també és molt menys probable no presentar-se.
+
+*GRADES_SEM_1* i *DAYTIME_ATTENDANCE*
+
+```{r, out.width="60%"}
+ggplot(prepro_data, aes(x = grades_sem_1, fill = daytime_attendance)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 1) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange")) 
+```
+
+Les persones que acudeixen a classe de tardes tenen una mitjana de notes al primer semestre més baixa que les persones que acudeixen a classes al matí.
+
+Es repliquen els mateixos patrons per a les notes del segon semestre que s'observen per a les notes del primer.
+
+*GRADES_SEM_2* i *GENDER*
+
+```{r, out.width="59%"}
+ggplot(prepro_data, aes(x = grades_sem_2, fill = gender)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 2) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange"))
+```
+
+*GRADES_SEM_2* i *SCHOLARSHIP*
+
+```{r, out.width="59%"}
+ggplot(prepro_data, aes(x = grades_sem_2, fill = scholarship)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 2) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange"))
+```
+
+*GRADES_SEM_2* i *DAYTIME_ATTENDANCE*
+
+```{r, out.width="59%"}
+ggplot(prepro_data, aes(x = grades_sem_2, fill = daytime_attendance)) +
+    geom_histogram(color="#e9ecef", alpha=1, position = 'dodge', binwidth = 2) +
+    scale_fill_manual(values = c("lightblue", "purple", "orange"))
+```
