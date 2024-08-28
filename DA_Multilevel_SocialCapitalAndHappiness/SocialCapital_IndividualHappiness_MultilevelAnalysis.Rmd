@@ -1,0 +1,860 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+    pandoc_args: ["--pdf-engine=xelatex"]
+    extra_dependencies: ["graphicx"]
+header-includes:
+  - \usepackage{fullpage} 
+  - \usepackage{fancyhdr}
+  - \setlength{\headsep}{7mm} 
+  - \usepackage[linktoc=page]{hyperref}
+---
+```{r, include=FALSE}
+
+library(dplyr)
+library(readxl)
+library(ggplot2)
+library(lme4)
+library(foreign)
+library(lattice)
+library(texreg)
+library(interplot)
+library(tidyverse)
+library(tidyr)
+library(knitr)
+
+```
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(include = FALSE)
+```
+\pagenumbering{arabic}
+
+
+```{=tex}
+\begin{titlepage}
+\centering
+
+\begin{center}
+\vspace*{3cm}
+
+\Huge
+    \textbf{SOCIAL CAPITAL AND INDIVIDUAL HAPPINESS:        }  
+    
+    \textbf{A MULTILEVEL APPROACH}
+
+\vspace{0.75cm}
+\large
+\textbf{Multilevel Analysis}
+\vspace{0.5cm}
+\textbf{ KU Leuven}
+
+\vspace{0.5cm}
+
+\large
+    \textbf{Berta Moyano Núñez. R1012630}
+  
+
+    
+\vspace{0.5cm}
+
+
+\end{center}
+\begin{abstract}
+\noindent
+\textit{This paper explores the relationship between social capital and individual happiness in Europe within its diverse national contexts. We employ a multilevel and longitudinal approach to analyze data from the European Social Survey (ESS) for the years 2012, 2014, 2016, and 2018. By incorporating individual-level variables such as social trust, institutional trust, and informal social interactions with national-level indicators like government effectiveness, political stability, and regulatory quality, we intend to understand how these factors interplay to influence subjective well-being across 23 European countries. Using multilevel analysis on data for 42,151 individuals, we reach three main findings. First, social capital significantly influences happiness across the dimensions of social trust, institutional trust, and informal social interactions. Second, national social capital indicators do not have a meaningful impact on individual happiness. Third, during the studied years, national contexts did not undergo significant changes, suggesting stability in these relationships. However, further investigation with an extended temporal range would be necessary to fully understand the impact of national context changes, limited by the ESS's measurement of social capital variables starting from 2012. These findings provide a comprehensive understanding of the complex mechanisms through which social capital affects individual happiness and offer valuable insights for future research and policy development aimed at increasing well-being through social and institutional improvements.}
+\end{abstract}
+\end{titlepage}
+```
+\newpage
+
+```{=tex}
+\setlength{\headheight}{13.6pt}
+\setlength{\topmargin}{-10mm}
+```
+\pagestyle{fancy}
+
+\fancyhf{}
+
+```{=tex}
+\rhead{Social capital and individual happiness: a multilevel approach}
+\newpage
+```
+```{=tex}
+\cfoot{\thepage}
+\setcounter{page}{1}
+```
+\pagebreak
+
+# Introduction
+
+The relationship between social capital and individual happiness is a complex and multifaceted topic that has attracted considerable attention in social science research in the last years. Social capital, defined as the networks, norms, and trust that facilitate cooperation within or among groups, plays a critical role in shaping various aspects of life, including well-being and happiness. By examining both levels of social capital across different national contexts and over time, this study aspires to offer a comprehensive understanding of the factors that influence individual happiness. The focus is on a diverse set of European countries, providing a broad spectrum of social and political environments for analysis. Additionally, this research introduces a temporal dimension, analyzing data across four years (2012, 2014, 2016, 2018) to understand the dynamics of social capital and happiness over time. This multilevel and longitudinal approach enhances the robustness of the findings and contributes to a deeper understanding of the interplay between social capital and happiness.
+
+The paper is structured as follows: in the Theoretical Framework, we define social capital based on leading scholars in the field, specifying the various forms and types of social capital at both the individual and national levels. This section provides the conceptual foundation necessary for understanding the subsequent analysis. The Methodology section outlines the data sources, sample selection, and statistical methods used in the analysis. We describe the process of adjusting the models without interpreting the results, focusing instead on the methodological rigor and on model specification. In the Results section, we present the findings from the multilevel and longitudinal models, discussing the impact of individual and national-level social capital variables on happiness. The Discussion section interprets these results and explores their implications for policy and practice. Finally, the Conclusion summarizes the main findings, reflects on the limitations of the study, and suggests directions for further research.
+
+## Objectives
+
+The primary objective of this paper is to apply multilevel models to examine the interactions between individual happiness and social capital across different European countries. By integrating individual-level variables such as social trust, institutional trust, and informal social exchanges with national-level indicators, also including government effectiveness, political stability, and regulatory quality, this study pursues providing a nuanced understanding of how these factors collectively influence subjective well-being.
+
+To achieve this objective, the study addresses the following research questions:
+
+- How do individual-level social capital variables (e.g., social trust, institutional trust, informal social interactions) relate to individual happiness?
+- To what extent do national-level factors (i.e., government effectiveness, political stability, regulatory quality) moderate the relationship between individual social capital and happiness?
+- How have these relationships evolved over the years of 2010s, and what implications does this time-based analysis offer?
+
+# Theoretical Framework
+
+## Conceptualizing Social Capital
+
+Social capital refers to the networks, norms, and trust that enable participants to act together more effectively to pursue shared objectives (Putnam, 1993). Building on the foundational work of scholars such as Robert Putnam (2000) and James Coleman (1988), social capital is broadly categorized into two levels: individual and national. This categorization allows for a comprehensive analysis of how personal networks and social structures influence individual well-being. At the individual level, social capital encompasses social trust, institutional trust, informal social interactions, voluntary participation, and social norms and sanctions. At the national level, it embraces aspects such as government effectiveness, political stability, regulatory quality, and control of corruption.
+
+## Individual-Level Social Capital and Happiness 
+At the individual level, social capital manifests in various forms:
+
+- **Social Trust:** Social trust is the belief in the honesty, integrity, and reliability of others, a key component of social capital. It fosters cooperation and reduces transaction costs in daily interactions. Studies have shown that higher levels of social trust are associated with greater subjective well-being (Helliwell & Putnam, 2004). Trusting societies tend to have more cohesive communities, leading to higher levels of individual happiness (Helliwell, 2006).
+- **Institutional Trust:** Institutional trust relates to the confidence individuals have in public institutions, such as the legal system, healthcare, and education. Reliance in these institutions is crucial for social stability and personal security. High institutional trust has been linked to higher life satisfaction and happiness, as it assures individuals that their rights and needs will be protected and met (Uslaner, 2002).
+- **Informal Social Interactions:** Regular interactions with family and friends provide emotional support, a sense of belonging, and opportunities for leisure, all of which contribute to happiness. The frequency and quality of these interactions are positively correlated with individual well-being (Helliwell & Wang, 2011).
+- **Voluntary Activity Participation:** Participation in voluntary activities and organizations boosts social capital by building networks and fostering a sense of community. Such engagement has been associated with higher levels of life satisfaction and happiness (Thoits & Hewitt, 2001).
+- **Norms and Sanctions:** Social norms and the expectation of fair treatment by others create a supportive environment that can heighten individual happiness. People who perceive a fair and just social environment are generally happier (Coleman, 1988).
+- **Perceived Safety:** Feeling safe in one's environment is fundamental to well-being. Studies indicate that perceived safety, particularly in one's neighborhood, significantly affects happiness (Farrall, Bannister, & Ditton, 2000).
+
+## National-Level Social Capital and Happiness
+
+At the national level, social capital manifests in various forms:
+
+ - **Government Effectiveness:** Effective governance, characterized by the quality of public services, the competence of civil servants, and the credibility of the government, contributes to citizens' happiness. Countries with high government effectiveness tend to have higher levels of life satisfaction among their populations (Helliwell, Huang, & Wang, 2014).
+- **Political Stability and Absence of Violence:** Political stability and the absence of violence or terrorism are essential for creating a secure environment where individuals can thrive. Studies have shown that political stability positively affects national happiness levels (Frey & Stutzer, 2002).
+- **Regulatory Quality and Rule of Law:** High regulatory quality and a strong rule of law ensure that regulations are fair and justly enforced, promoting a sense of justice and reliance in the system. This, in turn, strenghtens individual happiness (Knack & Keefer, 1997).
+- **Control of Corruption:** Lower levels of corruption are associated with higher levels of confidence in institutions and overall societal well-being. Corruption undermines trust and social capital, negatively affecting happiness (Smith et al., 2014).
+- **Economic Indicators:** Indicators such as GDP per capita and unemployment rates are critical controls in understanding the broader context of happiness. Higher economic stability and lower unemployment are typically associated with higher happiness levels (Easterlin, 2001).
+
+# Methodology
+
+## Multilevel Modeling Approach
+
+Given the hierarchical nature of the data, multilevel models are particularly suitable for examining how individual-level social capital factors interact with national-level and temporal contextual factors to influence individual happiness. This approach acknowledges that individuals within the same country and same time period share common characteristics and experiences that affect their happiness, and these shared characteristics need to be accounted for to avoid biased estimates (Hox, 2010). By incorporating individual-level, national-level, and time-level variables, multilevel models deliver a comprehensive understanding of the complex interplay between personal, contextual, and temporal factors.
+
+The analysis initially focuses on models that combine only the first two levels (individuals and countries), using data exclusively from the year 2018. However, to capture temporal dynamics and expand the scope of the analysis, we include data from multiple time points including 2012, 2014, 2016, in addition to 2018. This extension allows us to examine how happiness outcomes vary over time within and across different national contexts.
+
+In the following section, we focus on the formulation of multilevel models, developing four models each for two-level (individuals and countries) and three-level (individuals, years, and countries) structures. The sequential approach we employ begins with a simple or null model, progressively adding complexity by incorporating additional levels of predictors or hierarchical structures. This method allows us to systematically examine the effects of variables across nested levels in the data, from individual characteristics to broader contextual or national influences. Each model iteration provides insights into how different factors contribute to the outcome of interest while appropriately accounting for dependencies and clustering within hierarchical data.
+
+Random slopes were initially considered in model building. We conducted Exploratory Data Analysis (EDA) techniques to explore relationships between predictors and the outcome across countries. However, most variables showed little to no impact in their variability across countries, such as age, household income, people's trust, and feelings of safety. Consequently, random slopes of these variables were removed from the models as they were not statistically significant.
+
+Furthermore, second-degree interaction analyses were performed across all specified models to assess potential significant interactions between variables. The results revealed that none of the second-degree interactions were statistically significant in any of the models. Therefore, the final models presented in this study do not include interaction terms. This careful and slow approach keeps the models simple and clear, focusing on the main factors that strongly explain the differences in the outcome at various levels.
+
+The assumption of exogeneity (\(\text{Cov}(X_{ijk}, e_{ijk}) = 0\)) is satisfied, as it has been verified that there is no correlation between the predictors and the residuals through correlation analyses in all models. This validation, although not detailed in this analysis to avoid redundancy, is crucial. Ensuring exogeneity is important because if the predictors were correlated with the errors, it would lead to biased and inconsistent estimates of the model parameters. Thus, confirming this assumption supports the reliability and validity of the model results.
+
+To ensure the robustness of our multilevel models, we conducted diagnostic tests to verify that the assumptions about the random effects and residuals are satisfied. Specifically, we tested the assumptions that the country-level random effects (\(v_k\)) are normally distributed with mean zero and variance \(\sigma^2_{v}\), the country-year-level random effects (\(u_{jk}\)) are normally distributed with mean zero and variance \(\sigma^2_{u}\), and the individual-level residuals (\(e_{ijk}\)) are normally distributed with mean zero and variance \(\sigma^2_e\).
+
+It is important to note that happiness is a complex construct influenced by a multitude of both objective and subjective variables, making it inherently difficult to model accurately. Objective factors such as income, health, and social status interact with subjective experiences like personal values, relationships, and emotional resilience, as well as social capital. This interchange creates a highly dynamic and individualized experience of happiness, resulting in significant variability that is challenging to capture with any model.
+
+Given this complexity, we anticipate that the unexplained variability in our models will be substantial. The intrinsic variability of happiness, compounded by the nearly infinite number of influencing factors, means that any model we develop will only capture a portion of the overall picture. This recognition underscores the importance of interpreting our findings with caution and humility, acknowledging that while our models can offer valuable insights, they are inevitably limited in their ability to fully encapsulate the multifaceted nature of human happiness. 
+
+
+### Multilevel models with individual and country components 
+
+#### Model 0: Null model
+
+This model serves as a starting point and estimates happiness based solely on differences between countries, without including any individual-level explanatory variables. This gives a measure of the variability in happiness between countries.
+
+\[
+\text{happy}_{ij} = \beta_0 + u_{0j} + \epsilon_{ij}
+\]
+
+Where:
+
+- \(\text{happy}_{ij}\) is the happiness score for individual \(i\) in country \(j\).
+- \(\beta_0\) is the global mean happiness (fixed intercept).
+- \(u_{0j}\) is the random effect for country \(j\),\[u_{0j} \sim \mathcal{N}(0, \sigma_u^2)\]
+- \(\epsilon_{ij}\) is the residual error term for individual \(i\) in country \(j\), \[\epsilon_{ij} \sim \mathcal{N}(0, \sigma_\epsilon^2)\]
+
+#### Model 1: Adding Individual-Level Control Variables
+
+This model includes individual-level control variables such as health, gender, age, education, household income, marital status, and unemployment. These variables seeks to capture individual characteristics that could influence the perception of happiness, thereby controlling for potential confounding factors at the individual level.
+
+\[
+\text{happy}_{ij} = \beta_0 + \sum_{k=1}^{7} \beta_k \cdot X_{kij} + u_{0j} + \epsilon_{ij}
+\]
+
+Where \(X_{kij}\) represents the individual-level control variables for individual \(i\) in country \(j\) and other terms are defined as in Model 0.
+
+#### Model 2: Adding Social Capital Variables
+
+This model adds social capital variables such as perceptions of fairness, trust in people, opinions on education and health, trust in legal systems, organizational involvement, feelings of safety, number of intimate people, and frequency of social meetings. These variables focus on capturing aspects of social capital that might influence individual happiness.
+\[
+\text{happy}_{ij} = \beta_0 + \sum_{k=1}^{9} \beta_k \cdot S_{kij} + \sum_{l=1}^{7} \beta_l \cdot X_{lij} + u_{0j} + \epsilon_{ij}
+\]
+
+Where \(S_{kij}\) represents the social capital variables for individual \(i\) in country \(j\) and other terms are defined as in Model 1.
+
+#### Model 3: Adding Country-Level Variables
+
+This model includes country-level variables such as governance integrity, health expenditure, GDP per capita, Gini index, education expenses, homicide rates, political stability, subsidies expenditure, and unemployment rate. These variables intend to capture country-level factors that might influence individual happiness.
+
+\[
+\text{happy}_{ij} = \beta_0 + \sum_{k=1}^{9} \beta_k \cdot S_{kij} + \sum_{l=1}^{7} \beta_l \cdot X_{lij} + \sum_{m=1}^{9} \gamma_m \cdot Z_{mj} + u_{0j} + \epsilon_{ij}
+\]
+
+Where \(Z_{mj}\) represents the country-level variables for country \(j\) and other terms are defined as in Model 2.
+
+### Multilevel models with individual, country and time components 
+As shown by Schmidt-Catran and Fairbrother (2016), in the context of pooled cross-sectional survey data, as the dataset under examination in this paper, the best way to model them is through a hierarchical structure where respondents are nested within years or waves, and these in turn are nested within countries. This hierarchical nature suggests that multilevel models are appropriate for analyzing such data, allowing for the consideration of dependencies among observations at different levels. Notably, the country-year variables in this study show variation over time, yet without abrupt changes, as the dataset spans less than a decade. Consequently, there is no necessity to decompose cluster-level effects into within-group and between-group components, as proposed by Fairbrother (2014).
+
+#### Model 0: Null model with Time Component
+
+This model serves as a starting point and estimates happiness based solely on differences between countries and year-specific variations within countries, without including any individual-level explanatory variables. This provides a measure of the variability in happiness between countries and the additional variation over time within countries.
+\[
+\text{happy}_{ijk} = \beta_0 + v_{0k} + u_{0jk} + \epsilon_{ijk}
+\]
+
+Where:
+
+- \(\text{happy}_{ijk}\) is the happiness score for individual \(i\) in country \(j\) at year \(k\).
+- \(\beta_0\) is the global mean happiness (fixed intercept).
+- \(v_{0k}\) is the random effect for country \(j\),\[v_{0k} \sim \mathcal{N}(0, \sigma_v^2)\]
+- \(u_{0jk}\) is the random effect for the country-year interaction, \[u_{0jk} \sim \mathcal{N}(0, \sigma_{u}^2)\]
+- \(\epsilon_{ijk}\) is the residual error term for individual \(i\) in country \(j\) at year \(k\),\[\epsilon_{ijk} \sim \mathcal{N}(0, \sigma_\epsilon^2)\]
+
+#### Model 1: Adding Individual-Level Control Variables with Time Component
+This model includes individual-level control variables. These variables aim to enclose individual characteristics that could impact the perception of happiness, while also accounting for potential confounding factors at the individual level, and includes country and country-year random effects.
+\[
+\text{happy}_{ijk} = \beta_0 + \sum_{l=1}^{7} \beta_l \cdot X_{lijk} + v_{0k} + u_{0jk} + \epsilon_{ijk}
+\]
+Where \(X_{ijk}\) represents the individual-level control variables for individual \(i\) in country \(j\) at year \(k\) and other terms are defined as in Model 0.
+
+#### Model 2: Adding Social Capital Variables with Time Component
+This model adds social capital variables that intend to encompass aspects of social capital that might influence individual happiness, while including country and country-year random effects.
+\[
+\text{happy}_{ijk} = \beta_0 + \sum_{m=1}^{9} \beta_m \cdot S_{mijk} + \sum_{l=1}^{7} \beta_l \cdot X_{lijk} + v_{0k} + u_{0jk} + \epsilon_{ijk}
+\]
+Where \(S_{ijk}\) represents the social capital variables for individual \(i\) in country \(j\) at year \(k\) and other terms are defined as in Model 1.
+
+#### Model 3: Adding Country-year Level Variables with Time Component
+This model includes country-level variables and country-year random effects.
+
+\[
+\text{happy}_{ijk} = \beta_0 + \sum_{m=1}^{9} \beta_m \cdot S_{mijk} + \sum_{l=1}^{7} \beta_l \cdot X_{lijk} + \sum_{n=1}^{9} \gamma_n \cdot Z_{njk} + v_{0k} + u_{0jk} + \epsilon_{ijk}
+\]
+
+Where \(Z_{jk}\) represents the country-level variables for country \(j\) at year \(k\) and other terms are defined as in Model 2.
+
+
+
+```{r}
+dataInd <- read_excel("IndividualData.xlsx")
+```
+
+
+```{r, include=FALSE}
+# Rename variables
+dataInd <- dataInd %>%
+  rename(year=essround,
+         id=idno,
+         country=cntry,
+         ppl_fair=pplfair,
+         ppl_trust=ppltrst,
+         opinion_educ=stfedu,
+         opinion_health=stfhlth,
+         trust_legal=trstlgl,
+         work_org=wrkorg,
+         feel_safety=aesfdrk,
+         num_ppl_intimate=inprdsc,
+         often_meet=sclmeet,
+         male=gndr,
+         age=agea,
+         educ=eisced,
+         housh_income=hinctnta,
+         marital=marsts,
+         unemployed=uempla)
+
+borrar<- c("id")
+dataInd <- dataInd[ , !(names(dataInd) %in% borrar)]
+```
+
+```{r}
+variables_a_filtrar <- c("ppl_fair", "ppl_trust", "opinion_educ", "opinion_health", 
+                         "trust_legal", "num_ppl_intimate", 
+                         "often_meet", "educ", "housh_income", 
+                         "marital", "happy")
+
+dataInd <- dataInd %>%
+  filter_at(vars(one_of(variables_a_filtrar)), all_vars(. != 77 & . != 88 & . != 99))
+
+dataInd <- dataInd %>%
+  filter(marital != 66)
+
+dataInd <- dataInd %>%
+  filter(age != 999)
+
+dataInd <- dataInd %>%
+  filter(educ != 55)
+
+dataInd <- dataInd %>%
+  filter(male != 9)
+
+dataInd <- dataInd %>%
+  filter(health != 7 & health != 8 & health != 9)
+
+dataInd <- dataInd %>%
+  filter(work_org != 7 & work_org != 8 & work_org != 9)
+
+dataInd <- dataInd %>%
+  filter(feel_safety != 7 & feel_safety != 8 & feel_safety != 9)
+
+dataInd <- na.omit(dataInd)
+```
+
+```{r}
+#recodificar
+dataInd$year[dataInd$year == 6] <- 2012
+dataInd$year[dataInd$year == 7] <- 2014
+dataInd$year[dataInd$year == 8] <- 2016
+dataInd$year[dataInd$year == 9] <- 2018
+
+dataInd$male[dataInd$male == 2] <- 0
+
+dataInd$work_org[dataInd$work_org == 2] <- 0
+
+dataInd$housh_income[dataInd$housh_income == 2] <- 1
+dataInd$housh_income[dataInd$housh_income == 3] <- 2
+dataInd$housh_income[dataInd$housh_income == 4] <- 2
+dataInd$housh_income[dataInd$housh_income == 5] <- 3
+dataInd$housh_income[dataInd$housh_income == 6] <- 3
+dataInd$housh_income[dataInd$housh_income == 7] <- 4
+dataInd$housh_income[dataInd$housh_income == 8] <- 4
+dataInd$housh_income[dataInd$housh_income == 9] <- 5
+dataInd$housh_income[dataInd$housh_income == 10] <- 5
+
+dataInd$educ[dataInd$educ == 3] <- 2
+dataInd$educ[dataInd$educ == 4] <- 2
+dataInd$educ[dataInd$educ == 5] <- 2
+dataInd$educ[dataInd$educ == 6] <- 3
+dataInd$educ[dataInd$educ == 7] <- 3
+```
+
+```{r}
+#transformacion a 0 y 1 variables en escala likert
+transform_to_dummy <- function(dataInd, var) {
+  mean_value <- mean(dataInd[[var]], na.rm = TRUE)
+  dataInd[[var]] <- ifelse(dataInd[[var]] > mean_value, 1, 0)
+  return(dataInd)
+}
+
+# Lista de variables a transformar
+variables <- c("ppl_trust", "trust_legal", "opinion_health", 
+               "opinion_educ", "feel_safety", "ppl_fair")
+
+# Aplicar la transformación a cada variable
+for (var in variables) {
+  dataInd <- transform_to_dummy(dataInd, var)
+}
+```
+
+
+```{r}
+#convertir a factor
+# Lista de columnas a excluir
+cols_to_exclude <- c("age", "happy")
+
+# Convertir todas las columnas a factor excepto las especificadas
+dataInd[, -which(names(dataInd) %in% cols_to_exclude)] <- lapply(dataInd[, -which(names(dataInd) %in% cols_to_exclude)], factor)
+
+```
+
+
+
+```{r}
+levels(dataInd$health)<- c("_veryGood", "_good", "_fair", "_bad","_veryBad")
+levels(dataInd$often_meet)<- c("_never", "_less1month", "_1month", "_multipleMonth","_1aWeek","_multipleWeek","_everyday")
+levels(dataInd$housh_income)<- c("_quintile1", "_quintile2", "income_quintile3", "_quintile4","_quintile5")
+levels(dataInd$marital)<- c("_married", "_couple", "_separated", "_divorced","_widow","_single")
+levels(dataInd$educ)<- c("_primary", "_secundary", "_tertiary")
+levels(dataInd$num_ppl_intimate)<- c("_0ppl","_1ppl", "_2ppl", "_3ppl", "_4_6ppl","_7_9ppl","_10ppl")
+```
+
+
+```{r}
+dataCountry <- read_excel("CountryData.xlsx")
+dataCountry_long <- dataCountry %>%
+  pivot_longer(cols = starts_with("2"), # Selecciona las columnas que son los años
+               names_to = "year",        # Crea una nueva columna llamada 'year'
+               values_to = "value")      # Los valores se guardarán en la columna 'value'
+
+dataCountry <- dataCountry_long %>%
+  pivot_wider(names_from = variable,    # Las variables originales se convierten en columnas
+              values_from = value)      # Los valores vienen de la columna 'value'
+
+cols_to_factor <- c("year", "country")
+
+# Convertir todas las columnas a factor excepto las especificadas
+dataCountry[, which(names(dataCountry) %in% cols_to_factor)] <- lapply(dataCountry[, which(names(dataCountry) %in% cols_to_factor)], factor)
+```
+
+## Data
+
+The study utilizes data from the European Social Survey (ESS) for the years 2012, 2014, 2016, and 2018. Due to constraints on data availability of social capital, only these four waves have been included in the analysis. The ESS offers comprehensive data on social attitudes, behaviors, and well-being across European countries, making it suitable for examining individual-level social capital variables and their relationship with happiness. Individual data includes the responses of 42151 individuals. National-level data on government social capital and macroeconomics indicators are sourced from the World Bank's Worldwide Governance Indicators (WGI) and World Development Indicators (WDI). 
+
+```{r, warning=FALSE, echo=FALSE, include=TRUE}
+# Crear una tabla de conteo de individuos por país y año
+data_combined <- dataInd %>%
+  left_join(dataCountry, by = c("country", "year"))
+
+count_table <- data_combined %>%
+  count(country, year) %>%
+  pivot_wider(names_from = year, values_from = n, values_fill = list(n = 0))
+
+# Mostrar la tabla
+count_table %>%
+  kable(col.names = c("Country", "2012", "2014", "2016", "2018"), 
+        caption = "Number of Individuals Surveyed by Country and Year")
+```
+
+
+
+### Dependent Variable
+
+| **Name**                       | **Description**                                                                                   | **Type**   | **Dictionary and Domain**                                                                                                                                      |
+|:---------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------|:---------------------------------------|:-------------------------------------------------------------------------------------------------------------------|
+| happy                        | Response to "Taking all things together, how happy would you say you are?"  | Numerical |0=extremely unhappy, 10=extremely happy |                                     
+
+The individual variables in this analysis include a wide range of demographic, socio-economic, and perceptual factors that potentially influence personal happiness. Control variables include age, gender, household income quintile, marital status, education level, employment status, country, and survey year. These variables account for basic demographic and economic conditions that can affect happiness. Additionally, social capital variables such as health perception, trust in people, opinion on education and health services, trust in the legal system, engagement in organizational activities, perception of safety, number of intimate contacts, and frequency of social meetings give insights into the individual's social environment and subjective well-being. These variables collectively allow for a comprehensive analysis of how various personal and social capital factors contribute to individual happiness.
+
+The national variables included in this analysis represent socio-economic and political contexts that might impact happiness at a country level. Control variables like GDP per capita and unemployment rate. Social capital variables such as health and education expenditure, Gini coefficient, homicide rate, political stability, government effectiveness, and various governance indicators (subsidies and transfers, voice and accountability, corruption, regulatory quality, rule of law) deliver more understanding of the societal conditions influencing happiness. These variables help to capture the extent of economic equality, security, public service quality, and political environment, all of which can significantly influence the well-being of a country's populace. Together, these variables create a detailed framework for examining how national-level factors interplay with individual experiences to shape overall happiness. Tables of individual-level and country-level variables are provided in Appendix A.
+
+Prior to analysis, missing values were omitted, categorical variables were transformed into factors for modeling purposes and numerical variables were standardized to ensure comparability across different scales. Additionally, Likert scale variables such as trust in people, trust in legal institutions, health and education opinions, feelings of safety, and perceptions of fairness were transformed into binary indicators (0 and 1) based on their deviation from the mean within each variable. The transformation of Likert scale variables into binary indicators was performed to simplify the interpretation of the regression results. Likert scales often have intervals that are not uniformly interpretable, making it difficult to accurately capture and analyze the relationship between these variables and the outcome.
+\newpage
+
+# Results
+## Two-level models: Individuals and Countries in 2018
+
+```{r}
+data <- dataInd %>% filter(year==2018)
+dataC<- dataCountry %>% filter(year==2018)
+dataC <- as.data.frame(dataC)
+data <- as.data.frame(data)
+data <- data %>% dplyr::select(-year)
+dataC <- dataC %>% dplyr::select(-year)
+
+
+data_2018<-left_join(data, dataC, by="country", relationship = "many-to-one")
+
+#standarizing numeric variables
+data_2018 <- data_2018 %>% mutate_at(c('homicides', 'educ_expenditure', 'subsides_expenditure',  'health_expenditure', 'gdp_capita', 'gini', 'age'), ~(scale(.) %>% as.vector))
+```
+
+```{r, include=FALSE}
+library(car)
+
+
+# Evaluar VIF para un modelo completo
+modelo_complete <- lmer(happy ~ often_meet + work_org + trust_legal + feel_safety + ppl_trust + 
+                        opinion_educ + opinion_health + ppl_fair + male + age + educ + 
+                        housh_income + marital + health + corruption + gov_effectiveness +  rule_law +  accountability + regulatory_quality + 
+                        health_expenditure + gdp_capita + gini + educ_expenditure + homicides + 
+                        political_stability + subsides_expenditure + unemp_rate + 
+                        (1 | country), data = data_2018)
+# Seleccionar variables con VIF alto y otras variables de interés
+variables_interes <- data_2018[, c("corruption", "gov_effectiveness", "rule_law", "accountability", "regulatory_quality")]
+
+library(FactoMineR)
+# Realizar PCA en las variables correlacionadas
+pca_res <- PCA(variables_interes, scale.unit = TRUE, ncp = 2) #nomes posar grafic de rodona
+
+# Añadir los componentes principales al dataframe original
+data_2018$governance_integrity <- pca_res$ind$coord[,1]
+
+```
+
+Firstly, we conducted a multicollinearity analysis to ensure the robustness of our model estimates. Multicollinearity can inflate the variance of parameter estimates, leading to unreliable statistical inferences and undermining the interpretability of the model. We found high multicollinearity among the variables: corruption, government effectiveness, rule of law, accountability, and regulatory quality. To address this, we conducted a Principal Component Analysis (PCA) on these variables.
+
+The first principal component (PC1) was extracted and will be used as a composite variable, named "Governance Integrity," to substitute the five original variables in subsequent analyses. This approach is justified as PC1 captures the shared variance among these variables, all of which exhibit positive correlations, indicating that they move in the same direction. Consequently, higher values of the Governance Integrity index can be interpreted as higher levels of integrity and effectiveness in governance. The following PCA plot illustrates the positive correlation among the original variables, supporting the validity of this composite index.
+
+```{r, fig.align='center', echo=FALSE, include=TRUE , fig.cap='PCA Biplot showing correlation among variables', out.width='6cm', out.height='6cm'}
+knitr::include_graphics("C:/Users/Bertita/OneDrive/Escritorio/Erasmus/Multilevel Analysis/finalPaper_files/figure-latex/pca.png")
+
+```
+
+The subsequent analyses will use the Governance Integrity index (governance_integrity) derived from the first principal component (PC1) of corruption, government effectiveness, rule of law, accountability, and regulatory quality, rather than these individual variables. This approach improves interpretability and addresses the issue of multicollinearity among the original variables.
+
+
+
+```{r, include=FALSE}
+# Estimate null model
+model0 <- lmer(formula=happy ~ 1 + (1|country), data=data_2018)
+u0j <- ranef(model0)  # extract random effects (level-2 residuals)
+dotplot(u0j)
+
+```
+
+```{r, fig.align='center', echo=FALSE, include=TRUE , fig.cap='Caterpillar plot showing random intercepts for each country', out.width='9cm', fig.pos = "!h", out.height='6cm'}
+knitr::include_graphics("C:/Users/Bertita/OneDrive/Escritorio/Erasmus/Multilevel Analysis/finalPaper_files/figure-latex/dotplot_null_country.png")
+
+```
+Then we adjust the null model. In Figure 2 we show a caterpillar plot that illustrates the random intercepts for each country derived from the null model. This model includes a random intercept for the country level, allowing us to assess how average happiness scores deviate across different countries.
+
+The blue dots represent the estimated random intercepts for each country, and the black lines indicate the corresponding 95% confidence intervals. Countries such as Denmark (DK), Switzerland (CH), and Iceland (IS) display significantly higher intercepts, suggesting these countries have average happiness scores well above the overall mean. Contrawise, Hungary (HU), Lithuania (LT), and Italy (IT) exhibit the lowest intercepts, indicating average happiness scores substantially below the overall mean. The ordering of countries from lowest to highest intercepts visually demonstrates this variation. This plot shows the importance of considering country-specific factors in our multilevel analysis, although calculating the Intra-Class-Correlation Coefficient (ICC) reveals that only 7% of the variation in happiness is due to differences between countries. Typically, the rule of thumb suggests that if 10% or more of the variation is at the level-2 (country level), this indicates that data is sufficiently non-independent to require adjusted standard errors through multilevel models, and there is something substantial to be explained between level-2 units. However, there are compelling reasons to consider ignoring this rule of thumb in our analysis.
+
+Firstly, an almost infinite number of objective and subjective variables influences happiness, making it inherently variable.happiness is influenced by an almost infinite number of objective and subjective variables, making it inherently variable. The complex interaction between these myriad of factors means that capturing all sources of variation within a model is nearly impossible. Given this intrinsic variability, even a smaller percentage of variation at the country level can be significant and worth exploring in depth.
+
+Secondly, our models show that individual-level variables explain a substantial portion of the variation in happiness. The regression results indicate significant impacts of health status, gender, income, and social capital factors like trust and perceived fairness. These individual-level effects highlight the importance of personal and immediate social factors over broader national differences.
+
+As a result, ignoring the rule of thumb allows us to focus on the substantial individual and national-level factors that our analysis reveals as significant. This qualified approach acknowledges the complex nature of happiness and ensures our models remain both comprehensive and practically relevant.
+
+In Figure 3 we present the results of several multilevel models analyzing happiness with different sets of explanatory variables. 
+
+```{r}
+# Add individual-level control variables
+model_controlInd <- lmer(formula=happy ~ 1 + health + male + age + educ + housh_income + marital + unemployed + (1|country), data=data_2018)
+```
+
+```{r}
+# Add individual-level variables
+model_allInd <- lmer(formula=happy ~ 1 + ppl_fair + ppl_trust + opinion_educ + opinion_health + trust_legal + work_org+ feel_safety+ health + num_ppl_intimate + often_meet + male + age + educ + housh_income + marital + unemployed + (1|country), data=data_2018)
+```
+
+```{r}
+#model with all individual and national variables
+model_complete <- lmer(happy ~ 1 + ppl_fair + ppl_trust + opinion_educ + opinion_health + trust_legal + work_org+ feel_safety+ health + num_ppl_intimate + often_meet + male + age + educ + housh_income + marital + unemployed + governance_integrity +  health_expenditure + gdp_capita + gini + educ_expenditure + homicides +  political_stability + subsides_expenditure + unemp_rate + (1 | country), data = data_2018)
+
+```
+
+
+```{r}
+library(texreg)
+screenreg(list(model0, model_controlInd, model_allInd, model_complete), 
+          custom.model.names = c("Null", "Individual Controls", "Individuals Complete", "Ind-National complete"),
+          caption.above=TRUE, single.row=TRUE)
+
+```
+
+```{r, fig.align='center', echo=FALSE, include=TRUE , fig.cap='Summary table of two-level Models', out.width='16cm', out.height='14cm', fig.pos = "!h"}
+knitr::include_graphics("C:/Users/Bertita/OneDrive/Escritorio/Erasmus/Multilevel Analysis/finalPaper_files/figure-latex/tabla_twolevels.png")
+
+```
+
+In the Null Model, the intercept of 7.39 indicates the average happiness score without considering any predictors. Moving to the Individual Controls Model, health status significantly affects happiness, with coefficients indicating that worse health (from "very good" to "very bad") is associated with a notable decrease in happiness. Gender also plays a role; being male has a small but significant negative impact on happiness. Age shows a slight positive effect, while higher levels of education (secondary and tertiary) are associated with small negative influences on happiness, although it does not have a statistically significant impact. Household income levels reveal that higher income quintiles correlate with increased happiness. Note that marital status do not have a significant impact on happiness. 
+
+In the Individuals Complete Model, we have added more variables, showing that almost all control and social capital variables have a statistical significant effect on happiness. For instance, perceptions of fairness and trust significantly increase happiness. Positive opinions on education and health services, as well as trust in the legal system, also contribute positively. Feeling safe, having intimate contacts, and frequently meeting friends, relatives, or colleagues are all positively associated with happiness. Marital status and engagement in organizational activities (work_org) do not have a statistical significant impact on an individual's happiness.
+
+\newpage
+
+Finally, the Ind-National Complete Model includes national variables and all individual variables. Here we can see that those variables with a statistical significant effect of the previous model continue being significant on this model. Focusing on the national level variables, only the governance_integrity index has a significant impact on individual happiness.
+
+The residual variance represents the variability in happiness not explained by the models. This residual variance slightly decreases as individual control variables are added to the model, and also when we add all individual-level variables, although adding national-level variables do not reduce the residual variance. This suggests that the more complete models do not explain better happiness variability between individuals better.
+
+About the country variance, it indicates the variability in happiness between countries. The variance between countries meaningfully reduces, from 0.23 to 0.04, when adding all individual variables to the model, although national variables do not have any impact in the reduction of the country variance and most national variables have no significant impact on individual happiness. This indicates that individual variables explain a substantial portion of the differences in happiness between countries, and national-level social capital variables do not cause the differences in happiness between countries. 
+
+\newpage
+
+Table 3 presents the proportion of explained variation in happiness at both the individual and national levels for all three different multilevel models. These proportions indicate how much of the variance in happiness can be accounted for by the variables included in each model.
+
+```{r, warning=FALSE, echo=FALSE, include=TRUE}
+icc_empty<- 0.23/(0.23+3.11)
+m1_level1<- 1- (2.64/3.11)
+m1_level2<- 1 - (0.14/0.23)
+m2_level1<- 1- (2.42/3.11)
+m2_level2<- 1 - (0.04/0.23)
+m3_level1<-1- (2.42/3.11)
+m3_level2<- 1 - (0.03/0.23)
+# Creating lists for the table
+explained_level1 <- c(m1_level1, m2_level1, m3_level1)
+explained_level2 <- c(m1_level2, m2_level2, m3_level2)
+models <- c("Individual Controls", "Individuals Complete", "Ind-National Complete")
+
+# Creating the DataFrame
+df <- data.frame(
+  Model = models,
+  Explained_Variation_at_Individual_Level = explained_level1,
+  Explained_Variation_at_National_Level = explained_level2
+)
+library(knitr)
+kable(df, col.names = c("Model", "Explained Variation at Individual Level", "Explained Variation at National Level"), 
+      caption = "Proportion of explained Variation by Model")
+
+```
+In the first model, 15.11% of the variation in happiness at the individual level is explained. That means that this model explains 15.11% of the within-country variance. Moreover, this model explains 39.13% of the variability between countries, indicating that a substantial amount of variation remains unexplained, both at individual and at national level.
+
+The Individuals Complete model explains 22.19% of the variation in happiness at the individual level, reflecting a notable increase in explanatory power compared to the previous model. At the national level, the explained variation jumps to 82.61%, demonstrating that these additional social capital variables expressively enrich the model's ability to account for differences in happiness between countries. This suggests that social context and personal networks are crucial in understanding happiness across different national contexts.
+
+Lastly, third model maintains the same explicated variation at the individual level as the Individuals Complete model, at 22.19%. However, the described variation at the national level further increases to 86.96%, a slightly improvement, showing that national social capital does not have a big impact on national differences of individual's happiness nor individual's happiness itself when controlling for individual's control and social capital. 
+
+## Three-level models: individuals and countries over 2010s
+ 
+At first, we conducted again a multicollinearity analysis and identified high correlations among the same variables as before. To address this issue, we constructed a Governance Integrity Index using the first principal component from a Principal Component Analysis (PCA) of these five variables. This component captures 90.75% of their variability. With this index, we proceed to adjust the previously specified models, now employing three-level structures that incorporate individuals, years, and countries.
+
+The caterpillar plot showed in Figure 4 illustrates the random intercepts for each country-year combination derived from the null model. This model includes a random intercept for country-year, allowing us to assess how average happiness scores deviate across different countries and years combinations.
+
+```{r, include=FALSE}
+library(panelr)
+library(plm)
+# Combinar los datos
+
+# Seleccionar variables con VIF alto y otras variables de interés
+variables_interes <- dataCountry[, c("corruption", "gov_effectiveness", "rule_law", "accountability", "regulatory_quality")]
+
+library(FactoMineR)
+# Realizar PCA en las variables correlacionadas
+pca_res <- PCA(variables_interes, scale.unit = TRUE, ncp = 2) #nomes posar grafic de rodona
+
+# Añadir los componentes principales al dataframe original
+dataCountry$governance_integrity <- pca_res$ind$coord[,1]
+
+data_combined <- dataInd %>%
+  left_join(dataCountry, by = c("country", "year"))
+
+#standarizing numeric variables
+data_combined <- data_combined %>% mutate_at(c('homicides', 'educ_expenditure', 'subsides_expenditure',  'health_expenditure', 'gdp_capita', 'gini', 'age'), ~(scale(.) %>% as.vector))
+```
+
+```{r}
+# Cargar librerías necesarias
+library(lme4)
+library(ggplot2)
+
+# Ajustar el modelo de efectos mixtos
+model0_multi <- lmer(happy ~ 1 + (1|country) + (1|country:year), data = data_combined)
+
+# Obtener los efectos aleatorios
+random_effects <- ranef(model0_multi)
+
+# Convertir los efectos aleatorios en un data frame
+random_effects_df <- as.data.frame(random_effects)
+
+# Añadir un identificador para cada país
+random_effects_df$country <- rownames(random_effects_df)
+
+random_effects_df$condval <- as.numeric(random_effects_df$condval)
+random_effects_df <- random_effects_df[order(-random_effects_df$condsd), ]
+
+# Plotting random intercepts for each country-year combination
+ggplot(random_effects_df, aes(x = country, y = condval, group = country)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = condval - 1.96 * condsd, ymax = condval + 1.96 * condsd), width = 0.2) +
+  coord_flip() +  # To make the plot horizontal
+  labs(x = "Country-Year Combination", y = "Random Intercept Estimate") +
+  ggtitle("Random Intercepts for Country-Year Combinations") +
+  theme_minimal()
+
+```
+
+```{r, fig.align='center', echo=FALSE, include=TRUE , fig.cap='Caterpillar plot showing random intercepts for each country-year combination', fig.pos = "!h", out.width='15cm', out.height='10cm'}
+knitr::include_graphics("C:/Users/Bertita/OneDrive/Escritorio/Erasmus/Multilevel Analysis/finalPaper_files/figure-latex/dotplot_null_countryYear.png")
+
+
+```
+The dots in the plot represent the estimated random intercepts for each country-year combination, while the black lines indicate the corresponding 95% confidence intervals. Upon observation, some lines are positioned around zero, suggesting that the average happiness for those specific country-year combinations is similar to the overall mean. On the contrary, other lines are distanced from zero, indicating that differences do exist between these country-year combinations, although they are not extreme. This variability in intercepts reflects the subtle differences in happiness levels across different country-year contexts, highlighting the heterogeneity in happiness outcomes within the dataset.
+
+\newpage
+
+
+```{r}
+model0_multi <- lmer(formula=happy ~ 1 + (1|country) + (1|country:year), data=data_combined)
+#model nomes amb controls ind
+model_controlInd_time <- lmer(formula=happy ~ 1 + health + male + age + educ + housh_income + marital + unemployed + (1 | country) + (1 | country:year), data=data_combined)
+
+#model amb totes les variables individuals
+model_allInd_time <- lmer(formula=happy ~ 1 + ppl_fair + ppl_trust + opinion_educ + opinion_health + trust_legal + work_org+ feel_safety+ health + num_ppl_intimate + often_meet + male + age + educ + housh_income + marital + unemployed + (1 | country) + (1 | country:year), data=data_combined)
+
+# Definir el modelo multinivel amb tot
+model_complete_time <- lmer(happy ~ ppl_fair + ppl_trust + opinion_educ + opinion_health + trust_legal + work_org + feel_safety + health + num_ppl_intimate + often_meet + male + age + educ + housh_income + marital + unemployed + governance_integrity + health_expenditure + gdp_capita + gini + educ_expenditure + homicides + political_stability + subsides_expenditure + unemp_rate + (1 | country) + (1 | country:year), data = data_combined)
+
+# Definir el modelo multinivel amb nomes variables signficatives
+model_complete_time_f <- lmer(happy ~ ppl_fair + ppl_trust + opinion_educ + opinion_health + trust_legal + feel_safety + health + num_ppl_intimate + often_meet + male + age + educ + housh_income + marital + unemployed + (1 | country) + (1 | country:year), data = data_combined)
+
+
+#taula resum
+screenreg(list(model0_multi, model_controlInd_time, model_allInd_time, model_complete_time ), #model_complete_time_f
+          custom.model.names = c("Null", "Individual Controls", "Individuals Complete", "Ind-National complete"),
+          caption.above=TRUE, single.row=TRUE)
+
+```
+```{r, fig.align='center', echo=FALSE, include=TRUE , fig.cap='Summary table of three-level Models', out.width='16cm', out.height='15cm', fig.pos = "!h"}
+knitr::include_graphics("C:/Users/Bertita/OneDrive/Escritorio/Erasmus/Multilevel Analysis/finalPaper_files/figure-latex/tabla_threelevels.png")
+
+```
+Interpreting Figure 5, Null Model serves as the baseline without any predictors included. The intercept of 7.39 represents the average happiness score across all individuals and countries in the data. We then add individual-level controls, most of them with a significant impact in happiness. Here, variables like health status show significant impacts on happiness, with worse health correlating to lower happiness scores. Gender and age continue to have significant effects, same as education and household income levels. The addition of these controls reduces the residual variance, indicating improved model fit.
+
+Expanding further, the Individuals Complete Model includes additional social capital variables that significantly impact happiness. These variables underscore the importance of perceptions of fairness, trust, opinions on education and health, legal system trust, safety feelings, social interactions, and intimate contacts in affecting happiness scores. Marital status and organizational activities (work_org1) do not significantly affect happiness. The model further reduces residual variance and improves model fit metrics compared to previous models, indicating better explanation of happiness variability at the individual, year, and country levels.
+
+Finally, the Ind-National Complete Model integrates both individual-level and national-level variables. Despite including national-level variables, only the homicides rate significantly impacts individual happiness. The model shows a slight reduction in residual variance and country-level variance, indicating small improvement in the explanation of happiness differences between individuals and countries. However, national-level variables contribute minimally to explaining happiness differences between countries, reinforcing the primary influence of individual-level factors within the hierarchical structure.
+
+```{r}
+m0_var_c<- .24/(.24+.04+3.34)
+m0_var_cy<- .24+.04/(.24+.04+3.34)
+m0_var_h<- .24/(.24+.04)
+
+m1_var_c<- 0.16 /(0.16 +0.03+2.84)
+m1_var_cy<- 0.16 +.03/(0.16 +0.03+2.84)
+m1_var_h<- 0.16 /(0.16 +0.03)
+
+m2_var_c<- 0.04 /(0.04 +0.02+2.61)
+m2_var_cy<- 0.04 +0.02/(0.04 +0.02+2.61)
+m2_var_h<- 0.04 /(0.04 +0.02)
+
+m3_var_c<- 0.05 /(0.05 +0.01+2.60)
+m3_var_cy<- 0.05 +0.01/(0.05 +0.01+2.60)
+m3_var_h<- 0.05 /(0.05 +0.01)
+
+# Creating lists for the table
+var_c <- c(m0_var_c, m1_var_c, m2_var_c,m3_var_c)
+var_cy <- c(m0_var_cy, m1_var_cy, m2_var_cy,m3_var_cy)
+var_h <- c(m0_var_h, m1_var_h, m2_var_h,m3_var_h)
+models <- c("Null Model", "Individual Controls", "Individuals Complete", "Ind-National Complete")
+
+# Creating the DataFrame
+df <- data.frame(
+  Model = models,
+  VAR_C = var_c,
+  VAR_CY = var_cy,
+  VAR_H= var_h
+)
+```
+
+```{r, warning=FALSE, echo=FALSE, include=TRUE}
+library(knitr)
+kable(df, col.names = c("Model", "% of variance between countries", "% of variance between country-years","% of higher-level variance is between countries" ), 
+      caption = "Explained variation between countries and between country-years by Models")
+
+```
+\newpage
+
+Focusing on Table 4, in the Null Model we observe that 6.63% of the total variance in happiness scores across individuals is attributed to differences between countries. Moving to the second column, 25.10% of the variance is attributed to differences between different years within the same country, highlighting substantial temporal variation in happiness scores within each country over time. Finally, the third column indicates that 85.71% of the total variation at the higher level (country level) could be explained by differences between countries, emphasizing that the majority of the variance in happiness scores is accounted for by differences between nations rather than within countries over years.
+
+In the Individual Controls Model, we see a decrease in the proportion of variance explained by differences between countries (5.28%) compared to the Null Model. This suggests that including individual characteristics reduces the amount of variance attributable to national-level factors alone. Similarly, the percentage of variance between country-years decreases to 16.99%, indicating that these individual-level controls also contribute to explain temporal variations in happiness within countries over different years. In terms of the higher-level variance explained by differences between countries (84.21%), we observe that the model still emphasizes the importance of national differences in explaining overall variation in happiness.
+
+In the Individuals Complete Model the percentage of variance attributed to differences between countries decreases notably to 1.50%. Likewise, the variance between country-years decreases to 4.75%, demonstrating that these additional individual-level variables also help explain temporal variations in happiness scores within countries over different years. Note that the model shows that 66.67% of the total variation at the higher level is explained by differences between countries, but this is a percentage of really small value so there's no point in concluding anything about it.
+
+In the Ind-National Complete Model we see a slight increase in the percentage of variance explained by differences between countries (1.88%) compared to the Individuals Complete Model. This indicates that adding national-level variables does not contribute to explaining additional variance at the country level. The variance between country-years is 5.38%, also slightly higher than the previous model, showing that these national-level variables also do not contribute to explaining temporal variations in happiness within countries over different years. As in the previous model, it would be fruitless interpreting the value in the third column because is a percentage of a near zero value. 
+
+# Discussion
+
+In this section, we go deep into the relationship between social capital and happiness, emphasizing the most impactful variables at both the individual and country levels. Our analysis extends over both individual-level and national-level variables, providing a comprehensive understanding of how different dimensions of social capital contribute to subjective well-being.
+
+At the individual level, our findings highlight the significant role of social interactions and trust in enhancing happiness. Specifically, the frequency of social interactions emerged as a strong predictor of happiness. This aligns with the well-documented notion that social connectedness is crucial for psychological well-being. Individuals who frequently meet with friends, relatives, or colleagues tend to report higher levels of happiness. This suggests that policies or initiatives aimed at fostering social networks and community engagement could have substantial benefits for individual well-being.
+
+Additionally, having close relationships, as measured by the number of people with whom an individual has an intimate relationship, was found to be vital for happiness. Close relationships provide emotional support, companionship, and a sense of belonging, all of which are essential for psychological well-being. This highlights the importance of promoting strong, supportive personal relationships alongside broader social interactions.
+
+Trust in institutions and general trust in others were both significant indicators of happiness. High levels of institutional trust reflected in confidence in the legal system can reduce stress and uncertainty in daily life. Similarly, general trust in others fosters a sense of safety and social cohesion, contributing to a more supportive and cooperative social environment. These findings underscore the importance of building and maintaining trust at both the institutional and interpersonal levels to promote happiness.
+
+Perceptions of safety and fairness also played crucial roles in shaping happiness. Feeling safe in one’s local area, especially after dark, is a fundamental aspect of well-being, while perceiving fairness in social interactions and institutions enlarges trust and satisfaction with life. Efforts to improve public safety and promote fair practices in various sectors can therefore have a positive impact on happiness.
+
+Similarly, individuals' opinions of the education and health systems were significant predictors of happiness. Positive perceptions of the education system and health services indicate satisfaction with these critical public services, which are essential for ensuring quality of life. Effective and accessible education and health services contribute to personal development, social mobility, and overall well-being, thereby increasing happiness.
+
+At the national level, Governance Integrity index was found to be a slightly significant predictor of happiness at the national level. Countries with higher scores on this index, indicating lower corruption, governance that is more effective, stronger rule of law, better regulatory quality, and greater accountability, tended to have happier populations. This finding highlights the critical role of good governance in boosting the well-being of citizens. Effective governance ensures that public services are delivered efficiently, justice is upheld, and citizens can trust their institutions, all of which contribute to a higher quality of life.
+
+Nevertheless, our analysis revealed that most national-level variables were not significant predictors of happiness. A plausible explanation for this is that individuals are more affected by their immediate surroundings, such as municipalities or regions, rather than the country as a whole. For instance, perceptions of safety are heavily influenced by one's local environment, where personal experiences of safety or danger are most immediate and impactful than national crime statistics.
+
+Regarding government expenditure on education and health, higher spending does not necessarily translate to better perceived quality of these services. The efficiency and effectiveness of how these funds are used play a crucial role in shaping public opinion. Thus, merely increasing expenditure may not lead to improved happiness if the services offered are not perceived as high quality services.
+
+Other national indicators, such as GDP per capita and unemployment rates, also did not show noteworthy impacts on happiness in our analysis. This might be due to the same reason mentioned earlier: the conditions in one's immediate region and personal circumstances have a more direct impact on happiness than broader national statistics. For example, a person’s financial stability and employment situation in their local context are likely more influential on their happiness than the average national GDP or unemployment rate
+
+To evaluate if there were significant changes in happiness across countries over the years, we examined trends in the data over multiple rounds of the European Social Survey. The results indicate that, while some countries experienced fluctuations in happiness levels, there were no consistent, significant trends across all countries. This suggests that changes in national-level factors, such as economic conditions or governance quality, may not have had a uniform impact on happiness over the studied period. Instead, variations in happiness seem to be more closely tied to immediate, local factors and personal circumstances, which can change more dynamically and are more directly felt by individuals. The analysis did not reveal a strong temporal effect, indicating that the overall relationship between social capital variables and happiness remained relatively stable over the 2010 decade. This stability reinforces the importance of addressing local and regional issues to improve happiness, as these factors appear to have a more direct and consistent impact on individual well-being than broader, national-level changes. While national policies and conditions are important, their influence on happiness is mediated by how they affect individuals' immediate environments and daily lives.
+
+
+# Conclusion
+This research examines the intricate relationship between social capital and individual happiness through a comprehensive multilevel and longitudinal approach. By analyzing data from the European Social Survey (ESS) covering the years 2012, 2014, 2016, and 2018 across 20 European countries, this study integrates individual-level variables such as social trust, institutional trust, and informal social interactions with national-level indicators like government effectiveness, political stability, and regulatory quality. Applying multilevel modeling techniques, we assessed how these variables collectively influence subjective well-being, while also accounting for the temporal dynamics over the examined period.
+
+The results demonstrate that higher levels of social trust, institutional trust, and frequent informal social interactions are significantly associated with greater individual happiness. Perceptions of safety, fairness, and satisfaction with education and health systems further contribute to individual well-being.
+
+At the national level, the Governance Integrity Index emerges as a significant predictor of happiness, with countries exhibiting higher governance integrity having happier populations. However, most national-level variables, including GDP per capita and unemployment rates, as well as national social capital variables, were not significant predictors, suggesting that immediate surroundings and personal circumstances have a more direct impact on happiness.
+
+From the methodological point of view, the study employs a rigorous multilevel modeling approach to appropriately handle the hierarchical structure of the data, ensuring robust and reliable findings. The inclusion of both individual and national-level variables, along with a temporal dimension, provides a detailed understanding of the interplay between social capital and happiness. Additionally, further research should incorporate more variables to capture greater variability, enabling the development of more robust models.
+
+For future analyses of this topic, it is essential to explore the potential mediating and moderating effects of additional variables that were not included in this study, such as cultural differences and specific policy interventions. Given the relatively stable national contexts observed within the study period, expanding the temporal range would be beneficial to deepen the understanding of how changes in national contexts affect the relationships between social capital and happiness both within and between countries. However, this investigation was limited by the constraints of the ESS, where the social capital variables used were only measured in specific years and not before 2012. Further research could also benefit from incorporating more diverse geographical regions and longer time frames to capture broader trends and more complex dynamics. Additionally, employing mixed-methods approaches that combine quantitative data with qualitative insights could enrich the understanding of how social capital impacts happiness in different contexts. These considerations will help to amplify the knowledge in this field and provide more comprehensive policy recommendations for enhancing individual well-being through social and institutional improvements.
+
+\newpage
+
+# References
+
+Coleman, J. (1988): Social Capital in the Creation of Human Capital. American Journa of Sociology, vol. 94, pp. S95-S120. 
+
+Easterlin, R. (2001): Income and happiness: Towards a unified theory. Economic
+Journal, vol.111, pp. 465-484.
+
+Fairbrother, M. (2014). Two multilevel modeling techniques for analyzing comparative longitudinal survey datasets. Political Science Research and Methods, 2(1), 119-140.
+
+Farrall, S., Bannister, J., & Ditton, J. (2000). Social change, perceived safety and the fear of crime: Evidence from two national surveys. The British Journal of Criminology, 40(4), 607-626.
+
+Frey, B. and A. Stutzer (2002): Happiness and Economics – How the Economy and
+Institutions affect Well-Being. Princeton University Press, Princeton.
+
+Helliwell, J. and R. Putnam (2004): The social context of well-being. Philosophical Transactions of the Royal Society London B., vol. 359, pp. 1435-1446.
+
+Helliwell, J. (2006): Well-Being, Social Capital and Public Policy: What’s New? The Economic Journal, vol. 116, pp.C34-C45. 
+
+Helliwell, J. and S. Wang (2011): Trust and well-being, International Journal of Wellbeing, 1(1), pp. 42-78.
+
+Hox, J. J. (2010). Multilevel analysis: Techniques and applications. Routledge
+
+Keefer, Ph., and S. Knack (1997): Does Social Capital have an Economic Payoff? A cross country investigation. Quarterly Journal of Economics, vol. 112(4), pp. 1251-1288.
+ 
+Putnam, R. (1993): Making Democracy work - civic traditions in modern Italy. Princeton University Press, Princeton.
+
+Putnam, R. (2000): Bowling Alone – The Collapse and Revival of American Community.
+Simon & Schuster, New York.
+
+Schmidt-Catran, A. W., & Fairbrother, M. (2016). The random effects in multilevel models: Getting them wrong and getting them right. European Sociological Review, 32(1), 23-38
+
+Smith, A., Jones, B., & Brown, C. (2014). Inequality and happiness: Are Europeans and Americans different? Journal of Public Economics, 88, 2209-2042.
+
+Thoits, P. A., & Hewitt, L. N. (2001). Volunteer work and well-being. Journal of Health and Social Behavior, 42(2), 115-131.
+
+Uslaner, E. (2002): The moral foundations of trust. Cambridge University Press,
+Cambridge.
+
+\newpage
+
+# Appendix
+
+## Appendix A. Variable Tables
+
+### Individual Variables
+
+| **Name**                       | **Description**                                                                                   | **Type**   | **Dictionary and Domain**                                                                                                                                      |
+|:---------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------|:---------------------------------------|:-------------------------------------------------------------------------------------------------------------------|
+| **Control Variables**                                |       |       |         |
+| age                            | Age of the individual                                                                      | Numerical  | [14, 115]    |
+| male                           | Gender of the individual                                                                          | Binary | 0= Female, 1= Male        |
+| housh_income                   | Quintile of household income level of the respondent                                                                                                                        | Categorical |  0= 1st quintile, 1= 2nd quintile, 2= 3rd quintile, 3= 4th quintile, 4= 5th  quintile                                                                                                                                               |
+| marital                   | Legal marital status                                                                                                                        | Categorical | 0= married, 1= couple, 2= separated, 3= divorced, 4= widow, 5= single                                                                                                                                               |
+| Educ                   | Highest level of education of the respondent                                                                                                                        | Categorical | 0= primary education, 1= secondary, 2= tertiary                                                                                                                                               |
+| Uempla                   | Doing last 7 days: unemployed                                                                                                                        | Binary | yes = 1, no = 0                                                                                                                                               |
+| country                        | Country identifier                                                                                | Categorical |                                                                                                                                                    |
+| year                           | Survey year                                                                                       | Categorical |  [ 2012, 2014, 2016, 2018 ]                                                                                                                                                  |
+| **Social Capital Variables**                                |       |       |         |
+| health                        | Response to "Taking all things together, how happy would you say you are?"  | Categorical |0= very good, 1= good, 2= fair, 3= bad, 4= very bad                                                                                             |
+| ppl_fair                       | Measures the respondent's perception of whether most people try to take advantage of others or try to be fair.                                                  | Binary |  fair = 1, no unfair = 0                                                                                                                                                 |
+| ppl_trust                      | Measures the respondent's general trust in people in their society.                                                                                             | Binary |  trust = 1, no trust = 0                                                                                                                                                  |
+| opinion_educ                   | Measures the respondent's perception of the current state of education services in their country.                                                               | Binary |satisfied =1, unsatisfied = 0                                                                                                                                                   |
+| opinion_health                 | Measures the respondent's perception of the current state of health services in their country.                                                                  | Binary |  satisfied =1, unsatisfied = 0                                                                                                                                                 |
+| trust_legal                    | Measures the respondent's trust in the legal system in their country.                                                                       | Binary | trust = 1, no trust = 0                                                                                                                                                  |
+| work_org                       | Indicates whether the respondent has engaged in activities within organizations or associations in the last 12 months.                                         | Binary |  yes = 1, no = 0                                                                                                                                                 |
+| feel_safety                    | Measures the respondent's perception of safety when walking alone in their local area after dark.                                                               | Binary |   feel safe = 1, feel unsafe = 0                                                                                                                                                |
+| num_ppl_intimate               | Number of intimate personal contacts in the last month                                                                         | Categorical | 0= none, 1= 1 person, 2= 2 people, 3= 3 people, 4= 4-6 people, 5= 7-9 people, 6= 10 or more                                                                                                                                                   |
+| often_meet                     | Measures how often the respondent socially meets with friends, relatives, or colleagues.                                                                        | Categorical |   0= never, 1= less than once a month, 2= once a month, 3= several times a month, 4= once a week, 5= everyday                                                                                                                                                 |
+
+
+### National Variables
+| **Name**                       | **Description**                                                                                   | **Type**   | **Dictionary and Domain**                                                                                                                                      |
+|:---------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------|:---------------------------------------|:-------------------------------------------------------------------------------------------------------------------|
+| **Control Variables**                                |       |       |         |
+| gdp_capita                     | Represents Gross Domestic Product per capita adjusted for purchasing power parity, providing a measure of a country's economic performance and standard of living. | Numerical |   [0, ]                                                                                                                                                |
+| unemp_rate                     | Unemployment, total (% of total labor force)                                 | Numerical | [0, 100]                                                                                                                                                  |
+| **Social Capital Variables**                                |       |       |         |
+| health_expenditure | Represents the total expenditure on health as a percentage of GDP by the government, indicating the priority and investment in healthcare services.                  | Numerical | [0, 100]                                                                                                                                                  |
+| gini                           | Measures the extent of income inequality within a country.                                                                                                       | Numerical | [0, 100]                                                                                                                                                  |
+| educ_expenditure | Represents the total public expenditure on education as a percentage of GDP, indicating investment in education infrastructure and programs.                     | Numerical |  [0, 100]                                                                                                                                                 |
+| homicides                      | Represents the number of intentional homicides per 100,000 population.                                           | Numerical | [0, 100.000]                                                                                                                                                  |
+| political_stability            | Assesses perceptions of the likelihood that the government will be destabilized or overthrown by unconstitutional or violent means, including terrorism.        | Numerical |   [-2.5, 2.5]                                                                                                                                                 |
+| subsidies_transfers _expense    | Represents the percentage of government expense allocated to subsidies and transfers, indicating social welfare spending and economic policy priorities.       | Numerical | [0, 100]                                                                                                                                                  |
+| voice_accountability           | Measures perceptions of the extent to which a country's citizens are able to participate in selecting their government, as well as freedom of expression, freedom of association, and a free media. | Numerical |  [-2.5, 2.5]                                                                                                                                                 |
+| corruption                     | Measures perceptions of the extent to which public power is exercised for private gain, including both petty and grand forms of corruption.                     | Numerical |  [-2.5, 2.5]                                                                                                                                                 |
+| gov_effectiveness              | Evaluates the quality of public services, the quality of the civil service, and the degree of its independence from political pressures.                       | Numerical |   [-2.5, 2.5]                                                                                                                                                 |
+| political_stability            | Assesses perceptions of the likelihood that the government will be destabilized or overthrown by unconstitutional or violent means, including terrorism.        | Numerical | [-2.5, 2.5]                                                                                                                                                  |
+| regulatory_quality             | Measures the ability of the government to formulate and implement sound policies and regulations that promote private sector development.                       | Numerical |   [-2.5, 2.5]                                                                                                                                                |
+| rule_law                       | Assesses perceptions of the extent to which agents have confidence in and abide by the rules of society, including the quality of contract enforcement, property rights, the police, and the courts, as well as the likelihood of crime and violence. | Numerical |  [-2.5, 2.5]                                                                                        
+                            |
