@@ -44,6 +44,24 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
 <h1 dir="auto"></h1>
 
 <p dir="auto">
+  <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/80aba4dc-3696-4a30-89a6-d4b627b67ecb">
+    <img align="left" width="260" height="180" src="https://github.com/user-attachments/assets/80aba4dc-3696-4a30-89a6-d4b627b67ecb" style="max-width: 100%;">
+  </a>
+  <strong>
+    <a href="https://github.com/bertamoyano/DataScience_Projects/tree/db1f6bb90fc041e17aada501dcb49a8540038510/ML_ImageDeepLearning_PriceVideogames">
+      Predicting Game Prices from Steam Images
+    </a>
+  </strong>
+    <br>
+  <small><strong>Deep Learning - Predictive Modeling (Python - Jupyter Notebook)</strong></small>
+</p>
+<p dir="auto">
+  This project utilizes deep learning to predict game prices based on images from the Steam Store. With over 14,000 games and 125,000 images, we preprocess both tabular and image data, apply data augmentation, and build a Convolutional Neural Network (CNN) for price prediction. Our model’s performance is evaluated using MAE and MSE. 
+</p>
+
+<h1 dir="auto"></h1>
+
+<p dir="auto">
   <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/2faa4cf6-6038-4674-9ef8-aab829d67892">
     <img align="left" width="260" height="190" src="https://github.com/user-attachments/assets/2faa4cf6-6038-4674-9ef8-aab829d67892" style="max-width: 100%;">
   </a>
@@ -74,7 +92,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
   <small><strong>Statistics and Econometrics (R) </strong></small>
 </p>
 <p dir="auto">
-  This study investigates the link between social capital and individual happiness in Europe using multilevel analysis on data from 42,151 individuals across 23 countries (2012-2018). The findings reveal that social trust, institutional trust, and informal social interactions significantly impact happiness, while national-level social capital indicators have little effect in the short term. This study is conducted in R using data analytics tools and statistical methods.
+  This study investigates the link between social capital and individual happiness in Europe using multilevel analysis on data from individuals across 23 countries during 2012-2018. The findings reveal that institutional trust and informal social interactions significantly impact happiness, while national-level social capital indicators have little effect in the short term. 
 </p>
 
 <h1 dir="auto"></h1>
