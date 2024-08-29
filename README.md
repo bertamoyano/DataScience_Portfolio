@@ -16,8 +16,10 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
       Telco Customer Churn Prediction
     </a>
   </strong>
+  <br>
+  <small><strong style="display: block; margin-bottom: 5px;">Machine Learning - Predictive Modeling</strong></small>
 </p>
-<p dir="auto">
+<p dir="auto" style="margin-top: 5px;">
   This project focuses on predicting Telco customer churn using various metrics and models, including Random Forest, XGBoost, KNN, AdaBoost, and Logistic Regression. Given the challenge of class imbalance we used probability weighting to improve accuracy. The Random Forest model, after hyperparameter tuning, performed best in terms of Profit @ Top-20 and AUC, demonstrating its effectiveness in identifying high-value churners.
 </p>
 
