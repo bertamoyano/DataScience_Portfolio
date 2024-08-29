@@ -8,4 +8,9 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
 
 
 ## Certificates
-
+- [AI Fundamentals by DataCamp](https://github.com/bertamoyano/DataScience_Projects/blob/777a7335cfdabaaed2bee0591f4ba108bc42f2c3/Certificates/AIfundamentals_DataCamp.pdf)
+- [Data Literacy by DataCamp](https://github.com/bertamoyano/DataScience_Projects/blob/777a7335cfdabaaed2bee0591f4ba108bc42f2c3/Certificates/DataLiteracy_DataCamp.pdf)
+- IBM Data Science Professional Certificate (currently ongoing, 3/12)
+  * [What is Data Science?](https://github.com/bertamoyano/DataScience_Projects/blob/777a7335cfdabaaed2bee0591f4ba108bc42f2c3/Certificates/DataScienceOrientation_IBM.pdf)
+  * [Tools for Data Science](https://github.com/bertamoyano/DataScience_Projects/blob/777a7335cfdabaaed2bee0591f4ba108bc42f2c3/Certificates/DataScienceTools_IBM.pdf)
+  * [Data Science Methodology](https://github.com/bertamoyano/DataScience_Projects/blob/777a7335cfdabaaed2bee0591f4ba108bc42f2c3/Certificates/DataScienceMethodology_IBM.pdf)
