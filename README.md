@@ -17,7 +17,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
     </a>
   </strong>
   <br>
-  <small><strong style="display: block; margin-bottom: 5px;">Machine Learning - Predictive Modeling</strong></small>
+  <small><strong>Machine Learning - Predictive Modeling (Python - Jupyter Notebook) </strong></small>
 </p>
 <p dir="auto" style="margin-top: 5px;">
   This project focuses on predicting Telco customer churn using various metrics and models, including Random Forest, XGBoost, KNN, AdaBoost, and Logistic Regression. Given the challenge of class imbalance we used probability weighting to improve accuracy. 
@@ -34,6 +34,8 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
       Social Media Influence of Belgian Politicians
     </a>
   </strong>
+    <br>
+  <small><strong>Graph Analytics</strong></small>
 </p>
 <p dir="auto">
   Using Memgraph for Cypher queries and Gephi for visualization, we analyzed X (formerly Twitter) data from 150 Belgian parliament members to understand their social media influence and engagement, specially during the election campaign. We found that tweets with community notes, often linked to controversial content, received fewer likes, replies, and retweets but more views were often from politicians and parties with extreme positions.
@@ -50,6 +52,8 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
       Social Capital and Individual Happiness: A Multilevel Approach
     </a>
   </strong>
+    <br>
+  <small><strong>Statistics and Econometrics (R) </strong></small>
 </p>
 <p dir="auto">
   This study investigates the link between social capital and individual happiness in Europe using multilevel analysis on data from 42,151 individuals across 23 countries (2012-2018). The findings reveal that social trust, institutional trust, and informal social interactions significantly impact happiness, while national-level social capital indicators have little effect in the short term. This study is conducted in R using data analytics tools and statistical methods.
@@ -66,9 +70,11 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
       Analysis of Academic Success and Dropout in University Students (Catalan)
     </a>
   </strong>
+    <br>
+  <small><strong>Machine Learning - Unsupervised Learning (R)</strong></small>
 </p>
 <p dir="auto">
-  This study examines academic success and dropout rates among university students by using advanced statistical methods and unsupervised learning methods to identify subpopulations and specific profiles within the data. Using R, an Exploratory Data Analysis (EDA) was conducted to understand initial patterns, followed by clustering techniques, Principal Component Analysis (PCA), Multiple Correspondence Analysis (MCA) and Linear Discriminant Analysis (LDA) were employed to explore and characterize these patterns.
+  This study examines academic success and dropout rates among university students by using advanced statistical methods and unsupervised learning methods to identify subpopulations and specific profiles within the data. Using R, an Exploratory Data Analysis (EDA) was conducted to understand initial patterns, followed by clustering techniques, PCA, MCA and LDA were employed to explore and characterize these patterns.
 </p>
 
 ## Certificates
