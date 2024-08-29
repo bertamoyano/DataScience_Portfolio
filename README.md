@@ -20,7 +20,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
   <small><strong style="display: block; margin-bottom: 5px;">Machine Learning - Predictive Modeling</strong></small>
 </p>
 <p dir="auto" style="margin-top: 5px;">
-  This project focuses on predicting Telco customer churn using various metrics and models, including Random Forest, XGBoost, KNN, AdaBoost, and Logistic Regression. Given the challenge of class imbalance we used probability weighting to improve accuracy. The Random Forest model, after hyperparameter tuning, performed best in terms of Profit @ Top-20 and AUC, demonstrating its effectiveness in identifying high-value churners.
+  This project focuses on predicting Telco customer churn using various metrics and models, including Random Forest, XGBoost, KNN, AdaBoost, and Logistic Regression. Given the challenge of class imbalance we used probability weighting to improve accuracy. 
 </p>
 
 <h1 dir="auto"></h1>
@@ -36,7 +36,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
   </strong>
 </p>
 <p dir="auto">
-  Using Memgraph for Cypher queries and Gephi for visualization, we analyzed X (formerly Twitter) data from 150 Belgian parliament members to understand their social media influence and engagement, specially during the election campaign. We found that tweets with community notes, often linked to controversial content, received fewer likes, replies, and retweets but more views. Politicians and parties with extreme positions, especially on the right, had higher incidences of community notes, highlighting the need for vigilance in the era of misinformation.
+  Using Memgraph for Cypher queries and Gephi for visualization, we analyzed X (formerly Twitter) data from 150 Belgian parliament members to understand their social media influence and engagement, specially during the election campaign. We found that tweets with community notes, often linked to controversial content, received fewer likes, replies, and retweets but more views were often from politicians and parties with extreme positions.
 </p>
 
 <h1 dir="auto"></h1>
