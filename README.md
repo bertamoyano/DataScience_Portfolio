@@ -9,7 +9,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
 
 <p dir="auto">
   <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3e37ae86-086d-4835-89a2-de7e59203b17">
-    <img align="left" width="250" height="170" src="https://github.com/user-attachments/assets/3e37ae86-086d-4835-89a2-de7e59203b17" style="max-width: 100%;">
+    <img align="left" width="260" height="180" src="https://github.com/user-attachments/assets/3e37ae86-086d-4835-89a2-de7e59203b17" style="max-width: 100%;">
   </a>
   <strong>
     <a href="https://github.com/bertamoyano/DataScience_Projects/tree/e975e962f4b10fb1674c57b95f731ca7ca49902d/ML_PredictiveModeling_CustomerChurn">
@@ -25,7 +25,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
 
 <p dir="auto">
   <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/2faa4cf6-6038-4674-9ef8-aab829d67892">
-    <img align="left" width="250" height="180" src="https://github.com/user-attachments/assets/2faa4cf6-6038-4674-9ef8-aab829d67892" style="max-width: 100%;">
+    <img align="left" width="260" height="190" src="https://github.com/user-attachments/assets/2faa4cf6-6038-4674-9ef8-aab829d67892" style="max-width: 100%;">
   </a>
   <strong>
     <a href="https://github.com/bertamoyano/DataScience_Projects/tree/e975e962f4b10fb1674c57b95f731ca7ca49902d/ML_GraphAnalytics_PoliticsSocialNetwork">
@@ -41,7 +41,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
 
 <p dir="auto">
   <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ba159ba1-bf51-4bff-8248-506484f0ea83">
-    <img align="left" width="250" height="170" src="https://github.com/user-attachments/assets/ba159ba1-bf51-4bff-8248-506484f0ea83" style="max-width: 100%;">
+    <img align="left" width="260" height="180" src="https://github.com/user-attachments/assets/ba159ba1-bf51-4bff-8248-506484f0ea83" style="max-width: 100%;">
   </a>
   <strong>
     <a href="https://github.com/bertamoyano/DataScience_Projects/tree/345b5f01f69b6d9bdb114f4fcf906758c77e4bf6/DA_Multilevel_SocialCapitalAndHappiness">
@@ -57,7 +57,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
 
 <p dir="auto">
   <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/4d7fdf75-3238-40d3-a30c-0978cad4b225">
-    <img align="left" width="250" height="180" src="https://github.com/user-attachments/assets/4d7fdf75-3238-40d3-a30c-0978cad4b225" style="max-width: 100%;">
+    <img align="left" width="260" height="190" src="https://github.com/user-attachments/assets/4d7fdf75-3238-40d3-a30c-0978cad4b225" style="max-width: 100%;">
   </a>
   <strong>
     <a href="https://github.com/bertamoyano/DataScience_Projects/tree/345b5f01f69b6d9bdb114f4fcf906758c77e4bf6/ML_UnsupervisedLearning_AcademicSuccess">
