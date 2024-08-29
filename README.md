@@ -5,7 +5,7 @@ This Portfolio is a compilation of all the Data Science and Data Analysis projec
 - *LinkedIn*: www.linkedin.com/in/berta-moyano-nunez
 
 ## Projects
-<h1 dir="auto"></h1>
+
 
 <p dir="auto">
   <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/80aba4dc-3696-4a30-89a6-d4b627b67ecb">
